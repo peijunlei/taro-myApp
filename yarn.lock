@@ -12233,6 +12233,11 @@ taro-css-to-react-native@3.4.8:
     css-mediaquery "^0.1.2"
     postcss-value-parser "^3.3.0"
 
+taro-poster-render@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.npmmirror.com/taro-poster-render/-/taro-poster-render-2.1.2.tgz#d2d9c80f9a8a6206a294b00754356dd6fb5c7d03"
+  integrity sha512-xrwIO3ipMHzglMAKihwuGkGONu9VtgAB9Q8oBpcpYufKi9y1zZoaSK4BSvbUPyl0Obt6uRBLaGUSBh2f+0zSLA==
+
 term-size@^1.2.0:
   version "1.2.0"
   resolved "https://registry.npmmirror.com/term-size/-/term-size-1.2.0.tgz#458b83887f288fc56d6fffbfad262e26638efa69"
