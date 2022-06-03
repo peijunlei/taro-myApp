@@ -11,6 +11,7 @@ const config = {
   outputRoot: 'dist',
   plugins: [],
   defineConstants: {
+    TARO_ENV: JSON.stringify(process.env.TARO_ENV)
   },
   copy: {
     patterns: [

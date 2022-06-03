@@ -11,6 +11,8 @@ declare module '*.scss';
 declare module '*.sass';
 declare module '*.styl';
 
+declare const TARO_ENV: 'weapp' | 'alipay' | 'h5' | 'tt';
+declare const AMap: any;
 declare namespace NodeJS {
   interface ProcessEnv {
     TARO_ENV: 'weapp' | 'swan' | 'alipay' | 'h5' | 'rn' | 'tt' | 'quickapp' | 'qq' | 'jd'

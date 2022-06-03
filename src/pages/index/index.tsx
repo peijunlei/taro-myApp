@@ -27,12 +27,13 @@ const Home = (props: Props) => {
   return (
     <View>
       {
-        list.map(v => <Button onClick={() => Taro.navigateTo({ url: v.path })}>{v.title}</Button>)
+        list.map(v => <Button key={v.path} onClick={() => Taro.navigateTo({ url: v.path })}>{v.title}</Button>)
       }
-      <Button openType="share" >
-        <View>
+      <Button openType="share" onClick={(e)=>{
+        console.log(1111);
+        
+      }}>
           分享
-        </View>
       </Button>
     </View>
   );
