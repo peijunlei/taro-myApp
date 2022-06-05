@@ -22,19 +22,6 @@ const Index = () => {
   }, [])
   return (
     <View >
-      {/* <MapComponent
-        lngAndLat={lngAndLat}
-        onRender={(res) => {
-          setAddress(res.formattedAddress)
-        }}
-        onChange={(value) => {
-          console.log(value);
-        }}
-        onInputChange={(e)=>{
-          console.log(e);
-          
-        }}
-      /> */}
       <MapSite />
     </View>
   )

@@ -29,11 +29,10 @@ const Home = (props: Props) => {
       {
         list.map(v => <Button key={v.path} onClick={() => Taro.navigateTo({ url: v.path })}>{v.title}</Button>)
       }
-      <Button openType="share" onClick={(e)=>{
-        console.log(1111);
-        
+      <Button openType="share" onClick={(e) => {
+        console.log('分享');
       }}>
-          分享
+        分享
       </Button>
     </View>
   );

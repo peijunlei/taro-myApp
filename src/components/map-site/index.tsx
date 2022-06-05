@@ -31,19 +31,7 @@ const MapSite: React.FC<PageHomeProps> = props => {
   const [selected, setSelected] = useState<any>(); // 最终选中结果
   const serverKey = "c87789fdd54e701c3314ea7474d70efc" // 项目里自己使用企业 mapkey
 
-  useEffect(() => {
-    onloadMap();
-    return () => {
-      map && map?.destroy();
-    };
-    // eslint-disable-next-line
-  }, [selfCenter, map]);
-  const onloadMap = () => {
-    window.onload = async function () {
-      console.log("========== init ==========");
-      initMap();
-    };
-  };
+
   const initMap = () => {
     AMap.plugin("AMap.Geolocation", async function () {
       const geolocation = await new AMap.Geolocation({
@@ -72,11 +60,9 @@ const MapSite: React.FC<PageHomeProps> = props => {
           newmap.setCenter(locationArr);
         }
       });
-
       // 当前位置
       setMarker(marker);
       setMap(newmap);
-      // getAround(mapcenter && mapcenter.length > 0 ? mapcenter.join() : "");
 
     });
   };
@@ -129,14 +115,6 @@ const MapSite: React.FC<PageHomeProps> = props => {
     map?.off("dragstart", showGragStart);
   };
 
-  useEffect(() => {
-    console.log("initevent");
-    if (map?.on) {
-      initEvent();
-    }
-    return () => destoryEvent();
-    // eslint-disable-next-line
-  }, [map, aroundChoose, firstSearch]);
 
   const onFocus = () => {
     setShowSearchCont(true);
@@ -236,7 +214,22 @@ const MapSite: React.FC<PageHomeProps> = props => {
     console.log('保存数据', selected);
 
   };
-
+  useEffect(() => {
+    console.log('-----------------init-------------------');
+    initMap();
+    return () => {
+      map && map?.destroy();
+    };
+    // eslint-disable-next-line
+  }, []);
+  useEffect(() => {
+    console.log("initevent");
+    if (map?.on) {
+      initEvent();
+    }
+    return () => destoryEvent();
+    // eslint-disable-next-line
+  }, [map]);
   return (
     <View className="page-home">
       <Search
