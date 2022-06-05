@@ -16,7 +16,7 @@ export interface TipItem {
   /**详细地址 */
   address: string;
   /**所属区域 省+市+区（直辖市为“市+区”） */
-  district: string;
+  district?: string;
   id: string;
   /**tip中心点坐标 */
   location: string | Array<string>;

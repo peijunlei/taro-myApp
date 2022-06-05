@@ -5,11 +5,16 @@ const ApiUrl: {
   geo: string;
   around: string;
   regeo: string;
+  staticmap: string;
+  keywords: string;
 } = {
   inputtips: "https://restapi.amap.com/v3/assistant/inputtips",
   geo: "https://restapi.amap.com/v3/geocode/geo",
+  //poi2.0
   around: "https://restapi.amap.com/v5/place/around",
-  regeo: "https://restapi.amap.com/v3/geocode/regeo"
+  keywords: "https://restapi.amap.com/v5/place/text",
+  regeo: "https://restapi.amap.com/v3/geocode/regeo",
+  staticmap: "https://restapi.amap.com/v3/staticmap",
 };
 class API {
   /**
@@ -61,6 +66,32 @@ class API {
   static _getAround(data: { location: string }) {
     return request({
       url: ApiUrl.around,
+      method: "GET",
+      params: data
+    });
+  }
+  /**
+  * 关键字搜索
+  * @param data 
+  * @returns 
+  * @see https://lbs.amap.com/api/webservice/guide/api/newpoisearch#t5
+  */
+  static _getkeywordsSearch(data: { keywords: string, region?: string; page_size?: number, page_num?: number }) {
+    return request({
+      url: ApiUrl.keywords,
+      method: "GET",
+      params: data
+    });
+  }
+  /**
+   * 静态地图
+   * @param data 
+   * @returns 
+   * @see https://lbs.amap.com/api/webservice/guide/api/staticmaps
+   */
+  static _getStaticmap(data: { location: string, zoom: number }) {
+    return request({
+      url: ApiUrl.staticmap,
       method: "GET",
       params: data
     });

@@ -15,7 +15,9 @@ export default function request(req: RequestProps) {
       data: { ...req.params, key: serverKey },
       method: req.method,
       header: { "content-type": "application/json" },
-      success: (data) => resolve(data.data),
+      success: (data) => {
+        return resolve(data.data ? data.data : data)
+      },
       fail: (err) => reject(err),
     })
   })

@@ -10,7 +10,7 @@ import SearchContent from "./searchContent";
 import AroundList from "./aroundList";
 
 import "./index.less";
-import { ArroundList, ReGeoResult, TipList } from "./type";
+import { ArroundList, ReGeoResult, TipItem, TipList } from "./type";
 interface PageHomeProps { }
 
 const MapSite: React.FC<PageHomeProps> = props => {
@@ -94,6 +94,7 @@ const MapSite: React.FC<PageHomeProps> = props => {
     console.log(aroundChoose, "+++move+++");
     getAround(location);
     getReGeo(location)
+    // getStaticmap(location)
     // eslint-disable-next-line
   }, [map]);
 
@@ -147,6 +148,7 @@ const MapSite: React.FC<PageHomeProps> = props => {
 
   // 获取地址数据
   const getIptList = (keywords: string) => {
+    if (!keywords) return
     API._getInputtips({ keywords })
       .then((res: any) => {
         if (res && res.info === "OK") {
@@ -175,12 +177,19 @@ const MapSite: React.FC<PageHomeProps> = props => {
   }
   /**位置解析 */
   const getGeo = (address: string) => {
-    if (!location) return;
+    if (!address) return;
     API._getGeo({ address }).then((res: any) => {
       if (res && res.regeocode) {
         console.log('位置解析', res);
 
       }
+    });
+  }
+  /**静态地图 */
+  const getStaticmap = (location: string) => {
+    if (!location) return;
+    API._getStaticmap({ location, zoom: 15 }).then((res: any) => {
+      console.log(res);//没有返回值就是个图片
     });
   }
   /**获取周边数据 */
@@ -194,6 +203,26 @@ const MapSite: React.FC<PageHomeProps> = props => {
         }
       })
   };
+  /**获取周边数据 */
+  const getkeywordsSearchList = (keywords: string) => {
+    console.log('关键字搜索', keywords, addressInfo);
+    if (!keywords) return;
+    //限制了地区  citycode 城市编码始终有数据
+    API._getkeywordsSearch({ keywords, page_num: 1, page_size: 25, region: addressInfo?.addressComponent.citycode })
+      .then((res: any) => {
+        if (res.info === "OK" && res.pois && res.pois.length > 0) {
+          const newArray = res.pois.map(v => {
+            return {
+              ...v,
+              district: v.pname + v.cityname + v.adname
+            }
+          })
+          setSearchList(newArray)
+        } else {
+          getIptList(keywords)
+        }
+      })
+  };
 
 
   /**跳转坐标 */
@@ -204,8 +233,8 @@ const MapSite: React.FC<PageHomeProps> = props => {
 
   /**保存 */
   const handleSave = () => {
-    console.log('保存数据',selected);
-    
+    console.log('保存数据', selected);
+
   };
 
   return (
@@ -217,7 +246,7 @@ const MapSite: React.FC<PageHomeProps> = props => {
         showSearchCont={showSearchCont}
         onInput={(e: any) => {
           setInputval(e.detail.value);
-          getIptList(e.detail.value);
+          getkeywordsSearchList(e.detail.value);
         }}
         handleOnSubmit={handleOnSubmit}
         onBack={() => {
