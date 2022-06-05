@@ -6,7 +6,27 @@ export interface lngAndLat {
 }
 const defaultLngLat: lngAndLat = { lng: 114.24779, lat: 22.71991 };
 export const isH5 = TARO_ENV === 'h5'
-
+export const AllIcon: {
+  markerIcon: string;
+  searchIcon: string;
+  selfIcon: string;
+  closeIcon: string;
+  chooseIcon: string;
+  addressIcon: string;
+} = {
+  markerIcon:
+    "https://img.alicdn.com/imgextra/i4/O1CN01xSMn9X1NZ3fk0Q2Lj_!!6000000001583-2-tps-104-126.png",
+  searchIcon:
+    "https://img.alicdn.com/imgextra/i3/O1CN01BqbAld1aHjhHvqUq4_!!6000000003305-2-tps-32-32.png",
+  selfIcon:
+    "https://img.alicdn.com/imgextra/i2/O1CN017aEHag28cWbsBj8am_!!6000000007953-2-tps-78-56.png",
+  closeIcon:
+    "https://img.alicdn.com/imgextra/i4/O1CN01CjEaO71JXRolpeE1H_!!6000000001038-2-tps-32-32.png",
+  chooseIcon:
+    "https://img.alicdn.com/imgextra/i4/O1CN01Zpoczy20YqVTdKSrO_!!6000000006862-2-tps-32-32.png",
+  addressIcon:
+    "https://img.alicdn.com/imgextra/i4/O1CN01eIPIII239bWOLZsBk_!!6000000007213-2-tps-32-32.png"
+};
 export function getWxLocation() {
   return new Promise<lngAndLat>((resolve, reject) => {
     Taro.getSetting({
@@ -118,7 +138,29 @@ export async function getLocation() {
   const lngAndLat = isH5 ? await getH5Location() : await getWxLocation()
   return lngAndLat
 };
-
+/**
+ * 获取地址中指定的查询参数值。
+ * @param name 查询参数名。
+ * @param url 原地址。
+ * @return 返回查询参数值。如果找不到则返回 null。
+ * @example getQuery("foo", "?foo=1") // "1"
+ * @example getQuery("goo", "?foo=1") // null
+ */
+ export function getQuery(name: string, url = window.location.href) {
+  let match = /\?([^#]*)/.exec(url);
+  if (match) {
+    match = new RegExp(
+      "(?:^|&)" +
+        encodeURIComponent(name).replace(/([.*+?^${}()|[\]\\])/g, "\\$1") +
+        "=([^&]*)(?:&|$)",
+      "i"
+    ).exec(match[1]);
+    if (match) {
+      return decodeURIComponent(match[1]);
+    }
+  }
+  return "";
+}
 
 /**逆向地理编码 */
 export function getAddress(lngAndLat: lngAndLat) {

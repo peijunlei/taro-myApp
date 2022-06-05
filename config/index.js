@@ -1,3 +1,4 @@
+const path = require('path');
 const config = {
   projectName: 'myApp',
   date: '2022-5-5',
@@ -10,6 +11,11 @@ const config = {
   sourceRoot: 'src',
   outputRoot: 'dist',
   plugins: [],
+  alias: {
+    '@/*': path.resolve(__dirname, '..', 'src/*'),
+    '@/components': path.resolve(__dirname, '..', 'src/components'),
+    '@/utils': path.resolve(__dirname, '..', 'src/utils'),
+  },
   defineConstants: {
     TARO_ENV: JSON.stringify(process.env.TARO_ENV)
   },
