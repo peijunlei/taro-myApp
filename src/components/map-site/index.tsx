@@ -203,7 +203,7 @@ const MapSite: React.FC<PageHomeProps> = props => {
         }
       })
   };
-  /**获取周边数据 */
+  /**关键字搜索 */
   const getkeywordsSearchList = (keywords: string) => {
     console.log('关键字搜索', keywords, addressInfo);
     if (!keywords) return;
