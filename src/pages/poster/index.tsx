@@ -6,19 +6,18 @@ import { View } from '@tarojs/components';
 const PosterPage: FC = () => {
   const poster = useRef<PosterRef>(null);
   const env = Taro.getEnv()
-
   return (
-
     env === "WEB" ? <View>h5</View> :
       <Poster
         style={{ marginLeft: Taro.pxTransform(55) }}
         width={644}
         height={1104}
         ref={poster}
+        renderType="image"
         debug
         showMenuByLongpress
         downloadLimit={10}
-        onLongPress={() => poster.current?.preview()}
+        // onLongPress={() => poster.current?.preview()}  
         onRender={(url) => console.log('onRender', url)}
         onSave={(url) => console.log('onSave', url)}
         list={[
@@ -68,47 +67,36 @@ const PosterPage: FC = () => {
             fontSize: 28,
             baseLine: 'normal',
           },
-          {
-            type: 'image',
-            x: 70,
-            y: 240,
-            width: 508,
-            height: 68,
-            src: 'https://img.1000.com/shumou/interaction/text.png',
-          },
-          {
-            type: 'shape',
-            x: 22,
-            y: 760,
-            width: 600,
-            height: 320,
-            fillStyle: '#fff',
-            radius: 20,
-            strokeStyle: '#000',
-            lineWidth: 10,
-          },
-          {
-            type: 'shape',
-            x: 100,
-            y: 800,
-            width: 100,
-            height: 100,
-            fillStyle: 'red',
-            radius: 50,
-            strokeStyle: 'yellow',
-            lineWidth: 10,
-          },
-          {
-            type: 'image',
-            x: 60,
-            y: 380,
-            sx: 0,
-            sy: 0,
-            width: 600,
-            height: 300,
-            mode: 'cover',
-            src: 'https://img.1000.com/shumou/interaction/img2.png',
-          },
+          // {
+          //   type: 'image',
+          //   x: 70,
+          //   y: 240,
+          //   width: 508,
+          //   height: 68,
+          //   src: 'https://img.1000.com/shumou/interaction/text.png',
+          // },
+          // {
+          //   type: 'shape',
+          //   x: 22,
+          //   y: 760,
+          //   width: 600,
+          //   height: 320,
+          //   fillStyle: '#fff',
+          //   radius: 20,
+          //   strokeStyle: '#000',
+          //   lineWidth: 10,
+          // },
+          // {
+          //   type: 'image',
+          //   x: 60,
+          //   y: 380,
+          //   sx: 0,
+          //   sy: 0,
+          //   width: 600,
+          //   height: 300,
+          //   mode: 'cover',
+          //   src: 'https://img.1000.com/shumou/interaction/img2.png',
+          // },
         ]}
       />
   );

@@ -2,7 +2,8 @@ export default defineAppConfig({
   pages: [
     'pages/index/index',
     'pages/gaode/index',
-    'pages/poster/index'
+    'pages/poster/index',
+    'pages/share/index',
 
   ],
   window: {

@@ -1,5 +1,5 @@
 export default definePageConfig({
-  navigationBarTitleText: '高德地图',
+  navigationBarTitleText: '分享页',
   enableShareAppMessage: true,
-
+  enableShareTimeline: true
 })
