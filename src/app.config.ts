@@ -4,13 +4,31 @@ export default defineAppConfig({
     'pages/gaode/index',
     'pages/poster/index',
     'pages/share/index',
-
+    'pages/todo/index',
+    'pages/todo-detail/index',
+    'pages/user-center/index',
   ],
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#fff',
     navigationBarTitleText: 'WeChat',
-    navigationBarTextStyle: 'black'
+    navigationBarTextStyle: 'black',
+    // navigationStyle:"custom",
+  },
+  tabBar: {
+    color: "#333",
+    selectedColor: "#FB5629",
+    list: [{
+      iconPath:"./assets/tabbar/home.png",
+      selectedIconPath:"./assets/tabbar/home_active.png",
+      pagePath: "pages/index/index",
+      text: "首页"
+    }, {
+      iconPath:"./assets/tabbar/user.png",
+      selectedIconPath:"./assets/tabbar/user_active.png",
+      pagePath: "pages/user-center/index",
+      text: "我的"
+    }]
   },
   permission: {
     "scope.userLocation": {

@@ -27,6 +27,12 @@
       ],
       "@/utils/*": [
         "./src/utils/*"
+      ],
+      "@/store/*": [
+        "./src/store/*"
+      ],
+      "@/pages/*": [
+        "./src/pages/*"
       ]
     },
     "typeRoots": [
