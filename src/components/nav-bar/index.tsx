@@ -51,7 +51,10 @@ const NavBar: FC<INavBarProps> = (
   const navBarInfo = useMemo(() => {
     const systemInfo = Taro.getSystemInfoSync()
     const capsuleInfo = Taro.getMenuButtonBoundingClientRect();
-    const { statusBarHeight = 0, windowWidth } = systemInfo
+    const { statusBarHeight = 0, windowWidth,pixelRatio } = systemInfo
+
+    console.log(pixelRatio,'pixelRatio');
+    
     /**胶囊到状态栏的间隙 */
     const gap = capsuleInfo.top - statusBarHeight
     let right = windowWidth - capsuleInfo.right; //胶囊按钮右侧到屏幕右侧的边距
@@ -70,7 +73,11 @@ const NavBar: FC<INavBarProps> = (
     onSearch && onSearch()
   }
   const handleHomeClick = () => {
-    onHome && onHome()
+    if (onHome && typeof onHome === 'function') {
+      onHome()
+    } else {
+      Taro.switchTab({ url: "/pages/index/index" })
+    }
   }
   const handleBackClick = () => {
     if (onBack && typeof onBack === 'function') {
@@ -107,7 +114,6 @@ const NavBar: FC<INavBarProps> = (
           paddingTop: navBarInfo.statusBarHeight + navBarInfo.gap,
           paddingBottom: navBarInfo.gap,
           paddingRight: navBarInfo.capsuleInfo.width + navBarInfo.right
-          
         }} >
         <View
           className='nav-bar__left'

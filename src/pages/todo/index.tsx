@@ -30,15 +30,15 @@ const Todo = (props: Props) => {
   }, [])
   return (
     <>
-      <NavBar
-        title="todo"
-        showSearch
-        searchText="裴俊磊"
-        onHome={() => {
-          console.log('回首页');
-          Taro.switchTab({url:"/pages/index/index"})
-        }}
-      />
+      {
+        TARO_ENV !== 'h5' && <NavBar
+          title="todo"
+          showSearch
+          searchText="裴俊磊"
+          onHome={() => {
+          }}
+        />
+      }
       <View className={styles.todo}>
         <TodoInput />
         <TodoContent />

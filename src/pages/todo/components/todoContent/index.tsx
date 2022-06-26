@@ -66,12 +66,15 @@ const TodoContent: FC<TodoContentProps> = () => {
 
       }}
     >
-      {
-        todo.list.map((todo) => <Item item={todo} key={todo.id} />)
-      }
-      {
-        todo.list.length === 0 && <Text className={styles.empty}>没有数据哦~</Text>
-      }
+      <View>
+        {
+          todo.list.map((todo) => <Item item={todo} key={todo.id} />)
+        }
+        {
+          todo.list.length === 0 && <Text className={styles.empty}>没有数据哦~</Text>
+        }
+      </View>
+
     </ScrollView>
   );
 
