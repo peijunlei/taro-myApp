@@ -102,7 +102,7 @@ export interface PaintText {
   fontStyle?: "normal" | "italic" | "oblique";
   fontFamily?: string;
   /** 文字装饰，只支持line-through */
-  // textDecoration?: 'none' | 'line-through';
+  textDecoration?: 'none' | 'line-through';
 }
 
 export type PosterItemConfig = PaintImage | PaintShape | PaintText;

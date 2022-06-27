@@ -6,16 +6,6 @@ import Poster, { PosterRef } from '@/components/poster';
 const PosterPage: FC = () => {
   const poster = useRef<PosterRef>(null);
 
-
-  useEffect(() => {
-    Taro.getImageInfo({
-      src: '/src/bg.png',
-      success (res) {
-        console.log(res);
-        
-      }
-    })
-  },[])
   if (TARO_ENV === 'h5') return <View>h5不支持!</View>
   return (
     <Poster
@@ -25,22 +15,32 @@ const PosterPage: FC = () => {
       ref={poster}
       renderType="image"
       disableRerender
-      // debug
+      backgroundColor="#369"
+      debug
       showMenuByLongpress
       onRender={(url) => console.log('onRender', url)}
       onSave={(url) => console.log('onSave', url)}
       list={[
+        {
+          type: 'shape',
+          x: 0,
+          y: 0,
+          gradient: {
+            position: [0, 0, 560, 336],
+            colors: ['#FB5629', '#FC7B00']
+          },
+          width: 560,
+          height: 336,
+          radius: '16 16 0 0',
+        },
         // {
-        //   type: 'shape',
+        //   type: 'image',
         //   x: 0,
         //   y: 0,
-        //   gradient: {
-        //     position: [0, 0, 560, 336],
-        //     colors: ['#FB5629', '#FC7B00']
-        //   },
         //   width: 560,
         //   height: 336,
-        //   radius: 16,
+        //   mode: 'cover',
+        //   src: 'https://img.1000.com/shumou/interaction/bg3.png',
         // },
         // {
         //   type: 'image',
@@ -51,15 +51,6 @@ const PosterPage: FC = () => {
         //   mode: 'cover',
         //   src: 'https://img.1000.com/shumou/interaction/bg3.png',
         // },
-        {
-          type: 'image',
-          x: 0,
-          y: 0,
-          width: 560,
-          height: 336,
-          mode: 'cover',
-          src: 'https://img.1000.com/shumou/interaction/bg3.png',
-        },
         {
           type: 'image',
           x: 40,
@@ -99,14 +90,14 @@ const PosterPage: FC = () => {
           width: 480,
           height: 480,
           radius: 12,
-          src: 'https://test-wanmi-1305193689.cos.ap-chengdu.myqcloud.com/0f9102bac6bc3e464fc7974f514621e0.png?imageMogr2/thumbnail/340x',
+          src: 'https://img14.360buyimg.com/n0/jfs/t1/219497/18/1719/231993/61762935E0be23330/53ff0150593d5852.jpg',
         },
         {
           type: 'text',
           x: 40,
           y: 652,
           width: 320,
-          text: '星巴克原味微甜星巴克原味微甜咖啡正宗星巴克原味250g10袋原装货',
+          text: '星巴克原味微甜星巴克原味微甜咖啡正星巴克原味微甜星巴克原味微甜咖啡',
           color: 'rgba(0, 0, 0, 0.8)',
           fontSize: 24,
           lineHeight: 32,
@@ -128,7 +119,7 @@ const PosterPage: FC = () => {
         {
           type: 'text',
           x: 48,
-          y: 740,
+          y: 738,
           width: (textWidth) => textWidth,
           text: '砍价享',
           color: '#fff',
@@ -156,7 +147,9 @@ const PosterPage: FC = () => {
           text: '¥19.90',
           color: 'rgba(0, 0, 0, 0.4)',
           fontSize: 20,
+          lineHeight:20,
           baseLine: 'normal',
+          textDecoration:"line-through"
         },
         {
           type: 'text',
@@ -171,11 +164,11 @@ const PosterPage: FC = () => {
         {
           type: 'image',
           x: 400,
-          y: 656,
+          y: 650,
           width: 120,
           height: 120,
           radius: 60,
-          src: 'https://test-wanmi-1305193689.cos.ap-chengdu.myqcloud.com/0f9102bac6bc3e464fc7974f514621e0.png?imageMogr2/thumbnail/340x',
+          src: 'https://qrimg.jd.com/https%3A%2F%2Fitem.m.jd.com%2Fproduct%2F1233203.html%3Fpc_source%3Dpc_productDetail_1233203-118-1-4-2.png',
         },
       ]}
     />

@@ -35,9 +35,8 @@ export default class FreePoster {
   public async setCanvasBackground(canvasBackground) {
     if (canvasBackground) {
       this.time("渲染背景色");
-      // const color = canvasBackground;
       const { width, height } = this.options;
-      this.log("设置canvas的背景色：", canvasBackground);
+      this.log("设置canvas的背景色=>", canvasBackground);
       this.ctx.save();
       this.ctx.setFillStyle(canvasBackground);
       this.ctx.fillRect(0, 0, width, height);
@@ -61,7 +60,7 @@ export default class FreePoster {
       return Promise.resolve(this.images.get(url)?.path);
     }
 
-    
+
     // 支持微信本地临时文件
     if (url.startsWith("wxfile://")) {
       try {
@@ -304,17 +303,17 @@ export default class FreePoster {
     );
     this.ctx.closePath();
     this.ctx.clip();
-    if (gradient&&!fillStyle) {
+    if (gradient && !fillStyle) {
       //渐变色
-      const [x1,y1,x2,y2] = gradient.position 
-      const grd = this.ctx.createLinearGradient(x1,y1,x2,y2)
+      const [x1, y1, x2, y2] = gradient.position
+      const grd = this.ctx.createLinearGradient(x1, y1, x2, y2)
       grd.addColorStop(0, gradient.colors[0])
       grd.addColorStop(1, gradient.colors[1])
       // Fill with gradient
       this.ctx.setFillStyle(grd)
       this.ctx.fill();
     }
-    if (fillStyle&&!gradient) {
+    if (fillStyle && !gradient) {
       this.ctx.setFillStyle(fillStyle);
       this.ctx.fill();
     }
@@ -336,7 +335,7 @@ export default class FreePoster {
   public async paintText(options: Omit<PaintText, "type">) {
     this.time("绘制文字时间");
     this.log("开始绘制文字", options);
-    const {
+    let {
       textAlign = "left",
       opacity = 1,
       lineNum = 1,
@@ -344,14 +343,17 @@ export default class FreePoster {
       fontWeight = "normal",
       fontStyle = "normal",
       fontFamily = "sans-serif",
+      textDecoration,
+      fontSize
     } = options;
+    lineHeight = Math.max(lineHeight || fontSize)
     this.ctx.save();
     this.ctx.font =
       fontStyle +
       " " +
       fontWeight +
       " " +
-      toPx(options.fontSize) +
+      toPx(fontSize) +
       "px " +
       fontFamily;
     this.ctx.setGlobalAlpha(opacity);
@@ -411,12 +413,24 @@ export default class FreePoster {
       textArr.push(options.text);
     }
     textArr.forEach((item, index) => {
+      const gap = (lineHeight - fontSize) / 2
+      const line1 = gap + fontSize
       this.ctx.fillText(
         item,
         toPx(x),
-        toPx(options.y + (lineHeight || options.fontSize) * (index + 1))
+        toPx(options.y + line1 * (index + 1) + gap * index)
       );
     });
+    if (textDecoration === 'line-through' && lineNum === 1) {
+      this.ctx.setStrokeStyle(options.color)
+      this.ctx.setLineWidth(1)
+      const y = options.y + lineHeight / 2 + 2
+      this.ctx.moveTo(toPx(x), toPx(y))
+      //先将笔滑到200,200处
+      this.ctx.lineTo(toPx(x + textWidth), toPx(y));
+      //执行绘画的动作，如果没有执行stroke函数不会有任何的效果
+      this.ctx.stroke();
+    }
 
     await this.draw(true);
     this.ctx.restore();

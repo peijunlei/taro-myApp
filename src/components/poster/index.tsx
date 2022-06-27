@@ -39,8 +39,7 @@ const QMPosterCore: ForwardRefRenderFunction<PosterRef, PosterProps> = (
         onSaveFail: props.onSaveFail,
       });
       $freePoster.current = freePoster;
-      props.backgroundColor &&
-        (await freePoster.setCanvasBackground(props.backgroundColor));
+      props.backgroundColor && (await freePoster.setCanvasBackground(props.backgroundColor));
       await render();
       $isFirst.current = false;
     });
@@ -51,7 +50,7 @@ const QMPosterCore: ForwardRefRenderFunction<PosterRef, PosterProps> = (
     config?: PosterItemConfig[] | ((instance: FreePoster) => PosterItemConfig[])
   ): Promise<string | undefined> {
     if ($freePoster.current) {
-      Taro.showLoading({title:"海报加载中..."})
+      Taro.showLoading({ title: "海报加载中..." })
       $freePoster.current.clearRect();
       $freePoster.current.time("渲染海报完成");
       const tmp = config ?? props.list;
