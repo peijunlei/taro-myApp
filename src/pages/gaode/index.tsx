@@ -22,7 +22,8 @@ const Index = () => {
   }, [])
   return (
     <View >
-      <MapSite />
+      地图
+      {/* <MapSite /> */}
     </View>
   )
 }

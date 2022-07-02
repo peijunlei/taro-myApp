@@ -1,6 +1,6 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button, View } from "@tarojs/components";
-import Taro, { useDidShow, usePullDownRefresh, useShareAppMessage } from "@tarojs/taro";
+import Taro, { pxTransform, useDidShow, usePullDownRefresh, useShareAppMessage } from "@tarojs/taro";
 import { useAppSelector, useAppDispatch } from '@/store/hooks'
 
 import { addTodo, fetchTodoList } from './todoSlice'
@@ -9,13 +9,16 @@ import TodoHeader from "./components/todoHeader";
 import TodoContent from "./components/todoContent";
 
 import styles from './index.module.less'
-import NavBar from "@/components/nav-bar";
+import NavBar, { NavBarRef } from "@/components/nav-bar";
+import { isH5 } from "@/utils";
 // import NavBar from "@/components/nav-bar";
 type Props = {
 
 };
 
 const Todo = (props: Props) => {
+
+  const navRef = useRef<NavBarRef>(null)
   const todo = useAppSelector((state) => state.todoReducer)
   const dispatch = useAppDispatch()
   // usePullDownRefresh(async () => {
@@ -26,24 +29,18 @@ const Todo = (props: Props) => {
   // })
   useEffect(() => {
     dispatch(fetchTodoList(1))
-
+    console.log(navRef.current?.height);
   }, [])
   return (
-    <>
-      {
-        TARO_ENV !== 'h5' && <NavBar
-          title="todo"
-          showSearch
-          searchText="裴俊磊"
-          onHome={() => {
-          }}
-        />
-      }
-      <View className={styles.todo}>
+    <View>
+      {!isH5 && <NavBar title="todo" showSearch searchText="裴俊磊" ref={navRef} />}
+      <View className={styles.todo} style={{
+        height: `calc(100vh - ${navRef.current?.height || 0}px)`
+      }}>
         <TodoInput />
         <TodoContent />
       </View>
-    </>
+    </View>
 
   );
 };

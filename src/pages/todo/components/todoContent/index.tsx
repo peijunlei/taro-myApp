@@ -63,7 +63,6 @@ const TodoContent: FC<TodoContentProps> = () => {
       onRefresherRefresh={handleRefresh}
       onScrollToLower={() => {
         console.log(11);
-
       }}
     >
       <View>

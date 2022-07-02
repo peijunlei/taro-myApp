@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro';
 import { View, Text } from '@tarojs/components';
-import { useMemo } from 'react';
+import { forwardRef, ForwardRefRenderFunction, useImperativeHandle, useMemo } from 'react';
 import { FC } from 'react';
 import './index.less';
 
@@ -31,9 +31,13 @@ interface INavBarProps {
   /**点击搜索 */
   onSearch?: () => void;
 }
-const NavBar: FC<INavBarProps> = (
-  {
-    title,
+
+export interface NavBarRef {
+  /**导航栏的高度 */
+  height: number;
+}
+const NavBar: ForwardRefRenderFunction<NavBarRef, INavBarProps> = (
+  { title,
     background = "#fff",
     showBack = true,
     showHome = true,
@@ -45,16 +49,16 @@ const NavBar: FC<INavBarProps> = (
     onHome,
     onBack,
     color = "#333"
-  }
+  }, ref
 ) => {
 
   const navBarInfo = useMemo(() => {
     const systemInfo = Taro.getSystemInfoSync()
     const capsuleInfo = Taro.getMenuButtonBoundingClientRect();
-    const { statusBarHeight = 0, windowWidth,pixelRatio } = systemInfo
+    const { statusBarHeight = 0, windowWidth, pixelRatio } = systemInfo
 
-    console.log(pixelRatio,'pixelRatio');
-    
+    console.log(pixelRatio, 'pixelRatio');
+
     /**胶囊到状态栏的间隙 */
     const gap = capsuleInfo.top - statusBarHeight
     let right = windowWidth - capsuleInfo.right; //胶囊按钮右侧到屏幕右侧的边距
@@ -68,6 +72,12 @@ const NavBar: FC<INavBarProps> = (
     }
   }, [])
   console.log('导航栏信息=>', navBarInfo);
+
+
+  useImperativeHandle(ref, () => ({
+    height: navBarInfo.height
+  }))
+
 
   const handleSearchClic = () => {
     onSearch && onSearch()
@@ -156,4 +166,4 @@ const NavBar: FC<INavBarProps> = (
 }
 
 
-export default NavBar;
+export default forwardRef(NavBar);

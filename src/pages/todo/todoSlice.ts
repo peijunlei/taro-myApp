@@ -59,8 +59,6 @@ export const TodoSlice = createSlice({
 
 export const fetchTodoList = createAsyncThunk('todo/fetchTodoList',
   async (pageSize: number, thunkAPI) => {
-    console.log(pageSize);
-    
     Taro.showLoading({ title: "加载中..." })
     return new Promise<TodoItem[]>((resolve, _) => {
       setTimeout(() => {
