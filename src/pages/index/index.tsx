@@ -12,7 +12,7 @@ const list = [
     path: '/pages/poster/index'
   },
   {
-    title: '高德地图',
+    title: 'LBS定位',
     path: '/pages/gaode/index'
   },
   {

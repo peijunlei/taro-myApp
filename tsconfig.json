@@ -31,6 +31,9 @@
       "@/store/*": [
         "./src/store/*"
       ],
+      "@/hooks/*": [
+        "./src/hooks/*"
+      ],
       "@/pages/*": [
         "./src/pages/*"
       ]

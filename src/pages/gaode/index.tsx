@@ -1,32 +1,63 @@
-import Taro, { setStorageSync } from '@tarojs/taro'
-import { Component, useEffect, useMemo, useRef, useState } from 'react'
-import { Input, View } from '@tarojs/components'
+import useSetState from '@/hooks/useSetState'
+import { Input, View, Image, Button, Map } from '@tarojs/components'
+import Taro from '@tarojs/taro'
+import { useEffect, useState } from 'react'
+
 import './index.less'
-import { getAddress, getLocation, isH5, lngAndLat } from '../../utils'
-import MapComponent, { LngAndLat } from '@/components/MapComponent'
-import MapSite from '@/components/map-site'
+interface IState {
+  lat: number;
+  lng: number;
+}
+const MapPage = () => {
+  const [state, setState] = useSetState<IState>({
+    lat: 0,
+    lng: 0
+  })
 
-// const amapFile = require('../../../libs/amap-wx.130')
+  const _getLocation = () => {
+    console.log(111);
+  }
 
-const Index = () => {
-
-  const [address, setAddress] = useState("")
-  const [lngAndLat, setLngAndLat] = useState<LngAndLat>()
-
+  const init = () => {
+    Taro.getLocation({
+      type: 'gcj02', // gcj02
+      success(res) {
+        setState({ lat: res.latitude, lng: res.longitude }) // 设置经纬度信息
+        Taro.setStorageSync("latlng", `${res.latitude},${res.longitude}`)
+        _getLocation() // 获取当前位置点
+      },
+      fail(e) {
+        // 获取失败
+        console.log(e.errMsg);
+        if (e.errMsg.includes('auth deny')) { // 如果是权限拒绝
+          Taro.showModal({ // 显示提示
+            content: '你已经拒绝了定位权限，将无法获取到你的位置信息，可以选择前往开启',
+            success(res) {
+              if (res.confirm) { // 确认后
+                Taro.openSetting() // 打开设置页，方便用户开启定位
+              }
+            }
+          })
+        }
+      }
+    })
+  }
   useEffect(() => {
-    // getLocation().then(result => {
-    //   console.log('经纬度', result);
-    //   setLngAndLat({ lng: result.lng, lat: result.lat })
-    // })
-
+    init()
   }, [])
   return (
-    <View >
-      地图
-      {/* <MapSite /> */}
+    <View className='map_container'>
+      <View>经度:{state.lat} </View>
+      <View>纬度:{state.lng} </View>
+      <Map
+        style={{ height: '50vh', width: '100vw' }}
+        latitude={state.lat}
+        longitude={state.lng}
+        showLocation
+      />
     </View>
   )
 }
 
-export default Index;
+export default MapPage;
 
