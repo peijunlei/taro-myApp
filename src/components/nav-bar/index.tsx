@@ -57,8 +57,6 @@ const NavBar: ForwardRefRenderFunction<NavBarRef, INavBarProps> = (
     const capsuleInfo = Taro.getMenuButtonBoundingClientRect();
     const { statusBarHeight = 0, windowWidth, pixelRatio } = systemInfo
 
-    console.log(pixelRatio, 'pixelRatio');
-
     /**胶囊到状态栏的间隙 */
     const gap = capsuleInfo.top - statusBarHeight
     let right = windowWidth - capsuleInfo.right; //胶囊按钮右侧到屏幕右侧的边距

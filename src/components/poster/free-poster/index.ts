@@ -553,7 +553,7 @@ export default class FreePoster {
    */
   public async savePosterToPhoto(): Promise<string> {
     this.log("开始保存到相册");
-    // Taro.showLoading()
+    Taro.showLoading({title:"保存中..."})
     return new Promise(async (resolve, reject) => {
       try {
         const tmp = await this.canvasToTempFilePath();
@@ -563,7 +563,6 @@ export default class FreePoster {
             this.log("保存到相册成功");
             this.options?.onSave?.(tmp);
             Taro.showToast({
-              icon: "none",
               title: "保存成功",
             });
             resolve(tmp);
