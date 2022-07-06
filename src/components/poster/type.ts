@@ -24,6 +24,14 @@ interface PosterBaseProps {
   onSave?: (url: string) => void;
   onSaveFail?: (err: any) => void;
   onRenderFail?: (err: any) => void;
+  onClose?: () => void;
+  /**展示关闭? */
+  showClose?:boolean;
+    /**
+   * 圆角所处圆的半径尺寸，如果要绘制圆形，宽高一致，radius设为宽一半
+   * 顺序：左上 -> 右上 -> 右下 -> 左下
+   */
+     radius?: number | `${number} ${number} ${number} ${number}`;
 }
 
 export interface PosterImageProps extends PosterBaseProps {

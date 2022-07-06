@@ -1,4 +1,4 @@
-import { Canvas, Image } from "@tarojs/components";
+import { Canvas, Image, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import React, {
   forwardRef,
@@ -14,13 +14,15 @@ import FreePoster from "./free-poster";
 import { PosterItemConfig } from "./free-poster/types";
 import { PosterCanvasProps, PosterImageProps, PosterProps, PosterRef } from "./type";
 import { toPx } from "./free-poster/utils";
+import close from './img/close.png'
+import './index.less';
 // TODO: 支持text-decoration!!!
 const QMPosterCore: ForwardRefRenderFunction<PosterRef, PosterProps> = (
   props,
   ref
 ) => {
   const $retryCounter = useRef<number>(0);
-  const { canvasId = "posterCanvasId", renderType = "image" } = props;
+  const { canvasId = "posterCanvasId", renderType = "image", showClose = true, backgroundColor = '#fff', radius = 16 } = props;
   const $isFirst = useRef<boolean>(true);
   const [url, setUrl] = useState<string>();
   const $freePoster = useRef<FreePoster>();
@@ -39,7 +41,7 @@ const QMPosterCore: ForwardRefRenderFunction<PosterRef, PosterProps> = (
         onSaveFail: props.onSaveFail,
       });
       $freePoster.current = freePoster;
-      props.backgroundColor && (await freePoster.setCanvasBackground(props.backgroundColor));
+      // props.backgroundColor && (await freePoster.setCanvasBackground(props.backgroundColor));
       await render();
       $isFirst.current = false;
     });
@@ -50,11 +52,20 @@ const QMPosterCore: ForwardRefRenderFunction<PosterRef, PosterProps> = (
     config?: PosterItemConfig[] | ((instance: FreePoster) => PosterItemConfig[])
   ): Promise<string | undefined> {
     if ($freePoster.current) {
-      Taro.showLoading({ title: "海报加载中..." })
+      Taro.showLoading({ title: "加载中..." })
       $freePoster.current.clearRect();
       $freePoster.current.time("渲染海报完成");
       const tmp = config ?? props.list;
       const list = Array.isArray(tmp) ? tmp : tmp($freePoster.current);
+      list.unshift({
+        type: 'shape',
+        x: 0,
+        y: 0,
+        width: props.width,
+        height: props.height,
+        fillStyle: backgroundColor,
+        radius
+      })
       // 提前加载图片
       await $freePoster.current.preloadImage(
         list.reduce((arr, item) => {
@@ -133,7 +144,7 @@ const QMPosterCore: ForwardRefRenderFunction<PosterRef, PosterProps> = (
   }));
 
   return (
-    <Fragment>
+    <View className="mask-wrapper">
       <Canvas
         id={canvasId}
         canvas-id={canvasId}
@@ -146,16 +157,8 @@ const QMPosterCore: ForwardRefRenderFunction<PosterRef, PosterProps> = (
         style={{
           width: Taro.pxTransform(props.width),
           height: Taro.pxTransform(props.height),
-          position: "absolute",
+          position: "fixed",
           left: "-9999px",
-          bottom: 0,
-          // ...(renderType === "canvas"
-          //   ? { ...props.style }
-          //   : {
-          //     position: "absolute",
-          //     left:"-9999px",
-          //     bottom: 0,
-          //   }),
         }}
       />
       {url && renderType === "image" && (
@@ -171,7 +174,19 @@ const QMPosterCore: ForwardRefRenderFunction<PosterRef, PosterProps> = (
           onLongPress={() => props?.onLongPress?.(url)}
         />
       )}
-    </Fragment>
+      {url && renderType === "image" && showClose && (
+        <View
+          className="close"
+          onClick={(e) => {
+            e.stopPropagation();
+            typeof props.onClose === 'function' && props.onClose();
+            setUrl("")
+          }}
+        >
+          <Image src={close} className="img" />
+        </View>
+      )}
+    </View>
   );
 };
 

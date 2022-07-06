@@ -3,6 +3,7 @@ import { View, Text } from '@tarojs/components';
 import { forwardRef, ForwardRefRenderFunction, useImperativeHandle, useMemo } from 'react';
 import { FC } from 'react';
 import './index.less';
+import { toRpx } from '@/utils';
 
 
 interface INavBarProps {
@@ -111,24 +112,24 @@ const NavBar: ForwardRefRenderFunction<NavBarRef, INavBarProps> = (
   return (
     <View
       className={`nav-bar} ${extraClass}`}
-      style={{ height: navBarInfo.height }}
+      style={{ height: toRpx(navBarInfo.height) }}
     >
       <View
         className={`nav-bar__inner`}
         style={{
           color,
           background,
-          height: navBarInfo.height,
-          paddingTop: navBarInfo.statusBarHeight + navBarInfo.gap,
-          paddingBottom: navBarInfo.gap,
-          paddingRight: navBarInfo.capsuleInfo.width + navBarInfo.right
+          height: toRpx(navBarInfo.height),
+          paddingTop: toRpx(navBarInfo.statusBarHeight + navBarInfo.gap),
+          paddingBottom: toRpx(navBarInfo.gap),
+          paddingRight: toRpx(navBarInfo.capsuleInfo.width + navBarInfo.right)
         }} >
         <View
           className='nav-bar__left'
           style={{
-            width: navBarInfo.capsuleInfo.width,
-            height: navBarInfo.capsuleInfo.height,
-            marginLeft: navBarInfo.right
+            width: toRpx(navBarInfo.capsuleInfo.width),
+            height: toRpx(navBarInfo.capsuleInfo.height),
+            marginLeft: toRpx(navBarInfo.right)
           }} >
           {showBack && !showHome && (
             <View

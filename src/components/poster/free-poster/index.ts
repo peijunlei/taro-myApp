@@ -37,7 +37,7 @@ export default class FreePoster {
       this.time("渲染背景色");
       const { width, height } = this.options;
       this.log("设置canvas的背景色=>", canvasBackground);
-      this.ctx.save();
+      // this.ctx.save();
       this.ctx.setFillStyle(canvasBackground);
       this.ctx.fillRect(0, 0, width, height);
       await this.draw(true);
