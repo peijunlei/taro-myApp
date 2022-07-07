@@ -59,8 +59,6 @@ export default class FreePoster {
     if (this.images.has(url)) {
       return Promise.resolve(this.images.get(url)?.path);
     }
-
-
     // 支持微信本地临时文件
     if (url.startsWith("wxfile://")) {
       try {

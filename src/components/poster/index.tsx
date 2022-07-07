@@ -52,7 +52,6 @@ const QMPosterCore: ForwardRefRenderFunction<PosterRef, PosterProps> = (
     config?: PosterItemConfig[] | ((instance: FreePoster) => PosterItemConfig[])
   ): Promise<string | undefined> {
     if ($freePoster.current) {
-      Taro.showLoading({ title: "加载中..." })
       $freePoster.current.clearRect();
       $freePoster.current.time("渲染海报完成");
       const tmp = config ?? props.list;
@@ -86,7 +85,6 @@ const QMPosterCore: ForwardRefRenderFunction<PosterRef, PosterProps> = (
           props?.onRender?.(temp);
           $retryCounter.current = 0;
           $freePoster.current.timeEnd("渲染海报完成");
-          Taro.hideLoading()
           return temp;
         } catch (e) {
           if (++$retryCounter.current <= 2) {
@@ -95,16 +93,12 @@ const QMPosterCore: ForwardRefRenderFunction<PosterRef, PosterProps> = (
           } else {
             $freePoster.current.log(`重新渲染失败，放弃治疗`);
             props?.onRenderFail?.(e);
-            Taro.hideLoading()
-
           }
         }
       } else {
         $retryCounter.current = 0;
         props?.onRender?.();
         $freePoster.current.timeEnd("渲染海报完成");
-        Taro.hideLoading()
-
       }
     }
   }
@@ -144,7 +138,7 @@ const QMPosterCore: ForwardRefRenderFunction<PosterRef, PosterProps> = (
   }));
 
   return (
-    <View className="mask-wrapper">
+    <View className="poster-wrapper">
       <Canvas
         id={canvasId}
         canvas-id={canvasId}
