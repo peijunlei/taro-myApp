@@ -1,3 +1,4 @@
+import Taro from '@tarojs/taro';
 import { getCurrentPages } from '@tarojs/taro';
 import React, { Component } from 'react'
 
@@ -6,18 +7,26 @@ import { Provider } from 'react-redux'
 // 全局样式
 import './app.less'
 import { store } from './store'
+import { msg } from './utils/msg';
 
 
 class App extends Component {
   // 可以使用所有的 React 生命周期方法
-  componentDidMount() { }
+  componentDidMount() {
+    // setTimeout(() => {
+    //   msg.emit('handleLogin', true)
+    //   // Taro.switchTab({ url: '/pages/index/index' })
+    // }, 3000);
+  }
 
   // 对应 onLaunch
-  onLaunch() {
+  onLaunch(options) {
+    console.log('options', options);
+
     wx.onAppRoute(() => {
       const pages = getCurrentPages()
       const currentPage = pages[pages.length - 1]
-      console.log(currentPage);
+      // console.log(currentPage);
       currentPage.onShareAppMessage = () => {
         return {
           title: "全局分享拦截",

@@ -1,6 +1,7 @@
 import NavBar from "@/components/nav-bar";
 import { Button, View } from "@tarojs/components";
 import Taro, { useDidShow, useShareAppMessage } from "@tarojs/taro";
+import { useEffect } from "react";
 
 type Props = {
 
@@ -25,7 +26,15 @@ const list = [
   },
 ]
 const Home = (props: Props) => {
-  useDidShow(() => { })
+
+
+
+  useEffect(()=>{
+    // setTimeout(()=>{
+    // Taro.navigateTo({ url: '/pages/sharePage/sharePage' })
+      
+    // },2000)
+  },[])
   return (
     <View>
       {/* <NavBar  title="首页" showBack={false} showHome={false} /> */}

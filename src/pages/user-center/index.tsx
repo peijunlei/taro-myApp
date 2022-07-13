@@ -1,8 +1,8 @@
-import { Button, View, Text, Image } from "@tarojs/components";
+import { Button, View, Text, Image, Input } from "@tarojs/components";
 import Taro, { useDidShow, UserInfo } from "@tarojs/taro";
 import { useEffect, useMemo, useState } from "react";
 import styles from './index.module.less'
-
+const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
 type Props = {
 
 };
@@ -10,10 +10,10 @@ type Props = {
 const UserCenter = (props: Props) => {
 
   const [userInfo, setUserInfo] = useState<UserInfo>()
+  const [avatar, setAvatar] = useState<string | undefined>()
 
   const getUserInfo = () => {
-    Taro.getUserProfile({
-      desc: '用于完善会员资料',
+    Taro.getUserInfo({
       success: function (res) {
         console.log(res);
         setUserInfo(res.userInfo);
@@ -29,18 +29,20 @@ const UserCenter = (props: Props) => {
   }, [])
   return (
     <View className={styles.user_center}>
-      <Button onClick={getUserInfo} >获取用户信息</Button>
-      <Button openType="getPhoneNumber" onGetPhoneNumber={(e) => {
+      <Button openType="chooseAvatar" onChooseAvatar={(e) => {
         console.log(e);
-      }}>获取用户电话</Button>
+        setAvatar(e.detail.avatarUrl);
+      }}>
+        <Image src={avatar || defaultAvatarUrl} className={styles.avatar} />
+      </Button>
+      <View>
+        昵称:<Input type="nickname" />
+      </View>
+
       {
-        userInfo && (
+        avatar && (
           <View>
-            <Image src={userInfo?.avatarUrl || ""} className={styles.avatar} />
-            <View>
-              <Text>昵称:</Text>
-              <Text>{userInfo?.nickName}</Text>
-            </View>
+
           </View>
         )
       }

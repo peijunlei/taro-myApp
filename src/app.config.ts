@@ -7,6 +7,7 @@ export default defineAppConfig({
     'pages/todo/index',
     'pages/todo-detail/index',
     'pages/user-center/index',
+    'pages/sharePage/sharePage',
   ],
   window: {
     backgroundTextStyle: 'light',
