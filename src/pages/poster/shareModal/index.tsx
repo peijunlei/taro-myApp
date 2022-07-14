@@ -40,7 +40,7 @@ const ShareModal: FC<ShareModalProps> = ({ onClose }) => {
         width: 80,
         height: 80,
         radius: 40,
-        src: 'https://img.1000.com/shumou/interaction/avatar.png',
+        src: 'http://tmp/eas3BBJqrs5f2ab119855d4348c4efe11661dddf7608.jpeg',
       },
       // 这里的文字与下一个文字要联动居中
       {
