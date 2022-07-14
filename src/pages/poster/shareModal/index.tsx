@@ -1,23 +1,18 @@
 import Poster, { PosterItemConfig, PosterRef } from "@/components/poster";
 import { View } from "@tarojs/components";
-import Taro from "@tarojs/taro";
+import Taro, { UserInfo } from "@tarojs/taro";
 import { FC, useEffect, useRef, useState } from "react";
 import { fetchQrcode } from "../api";
 import './index.less'
 
 interface ShareModalProps {
   onClose: () => void;
+  userInfo?: UserInfo
+  qrcode?: string
 }
-
-const ShareModal: FC<ShareModalProps> = ({ onClose }) => {
+const defaultAvatarUrl = 'http://tmp/eas3BBJqrs5f2ab119855d4348c4efe11661dddf7608.jpeg'
+const ShareModal: FC<ShareModalProps> = ({ onClose, userInfo, qrcode }) => {
   const poster = useRef<PosterRef>(null);
-  const [code, setCode] = useState('')
-
-  const getQrcode = async () => {
-    Taro.showLoading({ title: "加载中..." })
-    const res = await fetchQrcode() as string;
-    setCode(res)
-  }
 
   const getList = (): PosterItemConfig[] => {
     return [
@@ -40,7 +35,7 @@ const ShareModal: FC<ShareModalProps> = ({ onClose }) => {
         width: 80,
         height: 80,
         radius: 40,
-        src: 'http://tmp/eas3BBJqrs5f2ab119855d4348c4efe11661dddf7608.jpeg',
+        src: userInfo?.avatarUrl || defaultAvatarUrl,
       },
       // 这里的文字与下一个文字要联动居中
       {
@@ -49,7 +44,7 @@ const ShareModal: FC<ShareModalProps> = ({ onClose }) => {
         y: 56,
         width: (textWidth) => textWidth,
         height: 20,
-        text: '中二猪猪猪猪猪猪',
+        text: userInfo?.nickName || "微信用户",
         color: '#fff',
         fontSize: 20,
         baseLine: 'normal',
@@ -150,18 +145,15 @@ const ShareModal: FC<ShareModalProps> = ({ onClose }) => {
         width: 120,
         height: 120,
         radius: 60,
-        src: code,
+        src: qrcode!,
       },
     ]
   }
 
-  useEffect(() => {
-    getQrcode()
-  }, [])
   return (
     <View className="share-modal-mask-wrapper">
       {
-        code && <Poster
+        qrcode && <Poster
           className="poster"
           width={560}
           height={844}
