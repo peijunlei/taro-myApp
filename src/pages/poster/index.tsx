@@ -14,7 +14,7 @@ const PosterPage: FC = () => {
     const res = await fetchQrcode() as string;
     if (!res) {
       Taro.hideLoading()
-      Taro.showToast({ title: "功能不可用" })
+      Taro.showToast({ title: "功能不可用",icon:"none" })
       return
     }
     setCode(res)

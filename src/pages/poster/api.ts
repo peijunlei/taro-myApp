@@ -4,8 +4,9 @@ const qrcode = 'https://qrimg.jd.com/https%3A%2F%2Fitem.m.jd.com%2Fproduct%2F123
 
 export function fetchQrcode() {
   return new Promise((resolve, reject) => {
+    const random = Math.random() > 0.3
     setTimeout(() => {
-      resolve(qrcode)
+      resolve(random ? qrcode : "")
     }, 2000)
   })
 }

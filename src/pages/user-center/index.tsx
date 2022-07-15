@@ -29,14 +29,17 @@ const UserCenter = (props: Props) => {
   }, [])
   return (
     <View className={styles.user_center}>
-      <Button openType="chooseAvatar" onChooseAvatar={(e) => {
-        console.log(e);
-        setAvatar(e.detail.avatarUrl);
-      }}>
+      <Button
+      className={styles.avatar_wrapper}
+        openType="chooseAvatar"
+        onChooseAvatar={(e) => {
+          setAvatar(e.detail.avatarUrl);
+        }}>
         <Image src={avatar || defaultAvatarUrl} className={styles.avatar} />
       </Button>
-      <View>
-        昵称:<Input type="nickname" />
+      <View className={styles.nickname}>
+        <Text>昵称:</Text>
+        <Input type="nickname" className={styles.ipt} />
       </View>
 
       {

@@ -1,9 +1,36 @@
-.user_center{
+.user_center {
   height: 100vh;
   padding: 20px;
-  .avatar{
+  display: flex;
+  flex-direction: column;
+  // align-items: center;
+  // justify-content: center;
+  
+  .avatar_wrapper {
+    display: inline-block;
+    padding: 0;
+    background-color: unset;
     width: 120px;
     height: 120px;
-    border-radius: 60px;
+    &::after{
+      display: none;
+    }
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 60px;
+    }
+  }
+
+  .nickname {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    .ipt {
+      flex: 1;
+      padding-left: 20px;
+      height: 60px;
+    }
   }
 }

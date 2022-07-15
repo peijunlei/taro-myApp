@@ -17,30 +17,57 @@ const MapPage = () => {
   const _getLocation = () => {
     console.log(111);
   }
-
-  const init = () => {
-    Taro.getLocation({
-      type: 'gcj02', // gcj02
-      success(res) {
-        setState({ lat: res.latitude, lng: res.longitude }) // 设置经纬度信息
-        Taro.setStorageSync("latlng", `${res.latitude},${res.longitude}`)
-        _getLocation() // 获取当前位置点
+  const getLocation = () => {
+    let _locationChangeFn = (res) => {
+      setState({ lat: res.latitude, lng: res.longitude }) // 设置经纬度信息
+      Taro.setStorageSync("latlng", `${res.latitude},${res.longitude}`)
+      console.log(1111);
+      Taro.offLocationChange(_locationChangeFn)
+    }
+    Taro.startLocationUpdate({
+      success() {
+        Taro.onLocationChange(_locationChangeFn)
       },
-      fail(e) {
-        // 获取失败
-        console.log(e.errMsg);
-        if (e.errMsg.includes('auth deny')) { // 如果是权限拒绝
-          Taro.showModal({ // 显示提示
-            content: '你已经拒绝了定位权限，将无法获取到你的位置信息，可以选择前往开启',
-            success(res) {
-              if (res.confirm) { // 确认后
-                Taro.openSetting() // 打开设置页，方便用户开启定位
-              }
-            }
-          })
-        }
+      fail(err) {
       }
     })
+  }
+  const init = () => {
+    Taro.getSetting({
+      success(res) {
+        console.log(res.authSetting['scope.userLocation']);
+
+        if (res.authSetting['scope.userLocation'] === false) {
+          Taro.showModal({
+            title: "提示",
+            content: "需要授权位置信息!",
+            success(res) {
+              if (res.confirm) {
+                Taro.openSetting({
+                  success: function (res) {
+                    if (res.authSetting['scope.userLocation']) {
+                      Taro.showToast({ title: '授权成功' })
+                      getLocation()
+                    }
+                  },
+                  fail(err) {
+                    Taro.showToast({ title: err.errMsg })
+                  },
+                })
+              }
+            },
+          })
+        } else {
+          getLocation()
+        }
+      },
+    })
+
+    return
+
+
+
+
   }
   useEffect(() => {
     init()
