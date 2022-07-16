@@ -24,6 +24,10 @@ const list = [
     title: 'todo',
     path: '/pages/todo/index'
   },
+  {
+    title: '虚拟化长列表',
+    path: '/pages/virtual-list/index'
+  },
 ]
 const Home = (props: Props) => {
 

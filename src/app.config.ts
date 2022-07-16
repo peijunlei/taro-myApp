@@ -8,6 +8,7 @@ export default defineAppConfig({
     'pages/todo-detail/index',
     'pages/user-center/index',
     'pages/sharePage/sharePage',
+    'pages/virtual-list/index',
   ],
   window: {
     backgroundTextStyle: 'light',

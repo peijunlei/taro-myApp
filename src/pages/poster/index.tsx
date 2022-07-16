@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import { Button, View } from '@tarojs/components';
-// import ShareModal from './shareModal2';
-import ShareModal from './shareModal';
+import ShareModal from './shareModal2';
+// import ShareModal from './shareModal';
 import Taro, { UserInfo } from '@tarojs/taro';
 import { fetchQrcode } from './api';
 
@@ -39,11 +39,11 @@ const PosterPage: FC = () => {
       })
     }
   }
-  if (TARO_ENV === 'h5') return <View>h5不支持!</View>
+  // if (TARO_ENV === 'h5') return <View>h5不支持!</View>
   return (
     <View>
       {visible && <ShareModal onClose={() => setVisible(false)} userInfo={userInfo} qrcode={code} />}
-      <Button onClick={handlePoster}> 生成海报 </Button>
+      <Button onClick={()=>setVisible(true)}> 生成海报 </Button>
     </View>
   );
 };

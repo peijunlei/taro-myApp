@@ -22,6 +22,23 @@ const config = {
   defineConstants: {
     TARO_ENV: JSON.stringify(process.env.TARO_ENV)
   },
+  terser: {
+    enable: true,
+    config: {
+      warnings: false,
+      compress: {
+        drop_debugger: true,
+        drop_console: true,
+        pure_funcs: ['console.log'],
+      },
+    },
+  },
+  csso: {
+    enable: true,
+    config: {
+      restructure: false,
+    },
+  },
   copy: {
     patterns: [
     ],
