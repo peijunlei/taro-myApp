@@ -9,6 +9,7 @@ export default defineAppConfig({
     'pages/user-center/index',
     'pages/sharePage/sharePage',
     'pages/virtual-list/index',
+    'pages/subscribe-message/index',
   ],
   window: {
     backgroundTextStyle: 'light',

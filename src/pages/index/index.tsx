@@ -28,6 +28,10 @@ const list = [
     title: '虚拟化长列表',
     path: '/pages/virtual-list/index'
   },
+  {
+    title: '订阅消息',
+    path: '/pages/subscribe-message/index'
+  },
 ]
 const Home = (props: Props) => {
 

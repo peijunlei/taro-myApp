@@ -35,8 +35,6 @@ const MapPage = () => {
   const init = () => {
     Taro.getSetting({
       success(res) {
-        console.log(res.authSetting['scope.userLocation']);
-
         if (res.authSetting['scope.userLocation'] === false) {
           Taro.showModal({
             title: "提示",

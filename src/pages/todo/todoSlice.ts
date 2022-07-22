@@ -10,26 +10,21 @@ export interface TodoItem {
 }
 export interface TodoState {
   list: TodoItem[];
+  loading: boolean;
 }
-const list: TodoItem[] = [
-  {
-    id: "1",
-    desc: "测试数据1",
-    createTime: new Date().toLocaleString(),
-    updateTime: new Date().toLocaleString(),
-    complete: false,
-  },
-  {
-    id: "2",
-    desc: "测试数据2",
+const list: TodoItem[] = Array(100).fill(0).map((v, index) => {
+  return {
+    id: index + "",
+    desc: `测试数据${index + 1}`,
     createTime: new Date().toLocaleString(),
     updateTime: new Date().toLocaleString(),
     complete: false,
   }
-]
+})
 // Define the initial state using that type
 const initialState: TodoState = {
-  list: []
+  list: [],
+  loading: false
 }
 
 export const TodoSlice = createSlice({
@@ -49,6 +44,9 @@ export const TodoSlice = createSlice({
         state.list.splice(index, 1)
       }
     },
+    toggleLoading: (state) => {
+      state.loading = !state.loading
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchTodoList.fulfilled, (state, action) => {
@@ -58,17 +56,21 @@ export const TodoSlice = createSlice({
 })
 
 export const fetchTodoList = createAsyncThunk('todo/fetchTodoList',
-  async (pageSize: number, thunkAPI) => {
+  async (pageNum: number, { dispatch }) => {
+    dispatch(toggleLoading())
     Taro.showLoading({ title: "加载中..." })
     return new Promise<TodoItem[]>((resolve, _) => {
       setTimeout(() => {
-        resolve(list)
+        dispatch(toggleLoading())
         Taro.hideLoading()
+        resolve(list.slice(0, pageNum * 10))
+        // resolve([])
+
       }, 2000);
     })
   }
 )
 
 
-export const { addTodo, toggleTodo, removeTodo } = TodoSlice.actions
+export const { addTodo, toggleTodo, removeTodo, toggleLoading } = TodoSlice.actions
 export default TodoSlice.reducer

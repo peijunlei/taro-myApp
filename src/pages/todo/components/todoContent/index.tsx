@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ScrollView, View, Image, Checkbox, Text } from "@tarojs/components";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { TodoItem, toggleTodo, removeTodo, fetchTodoList } from "../../todoSlice";
 import styles from './index.module.less'
 
@@ -8,10 +8,12 @@ import deleteIcon from '../../img/delete.png'
 import Taro from "@tarojs/taro";
 
 interface TodoContentProps {
-
+  nextPage: () => void;
+  noMore: boolean;
+  loadingMore: boolean;
 }
 
-const TodoContent: FC<TodoContentProps> = () => {
+const TodoContent: FC<TodoContentProps> = ({ nextPage, noMore, loadingMore }) => {
 
   const todo = useAppSelector((state) => state.todoReducer)
   const dispatch = useAppDispatch()
@@ -52,6 +54,9 @@ const TodoContent: FC<TodoContentProps> = () => {
       </View>
     )
   }
+  useEffect(() => {
+    console.log(todo.loading, 'todo.loading');
+  }, [todo.loading])
   return (
     <ScrollView
       className={styles.todo_content}
@@ -63,17 +68,15 @@ const TodoContent: FC<TodoContentProps> = () => {
       onRefresherRefresh={handleRefresh}
       onScrollToLower={() => {
         console.log(11);
+        nextPage && nextPage()
       }}
     >
       <View>
-        {
-          todo.list.map((todo) => <Item item={todo} key={todo.id} />)
-        }
-        {
-          todo.list.length === 0 && <Text className={styles.empty}>没有数据哦~</Text>
-        }
+        {todo.list.map((todo) => <Item item={todo} key={todo.id} />)}
       </View>
-
+      {todo.list.length === 0 && !todo.loading && <Text className={styles.empty}>没有数据哦~</Text>}
+      {noMore && <View>没有更多了</View>}
+      {loadingMore && todo.list.length !== 0 && <View>加载中...</View>}
     </ScrollView>
   );
 
