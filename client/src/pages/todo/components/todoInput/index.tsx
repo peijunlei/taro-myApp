@@ -1,7 +1,8 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { Input, View } from "@tarojs/components";
+import Taro from "@tarojs/taro";
 import { FC, useRef } from "react";
-import { addTodo } from '../../todoSlice'
+import { fetchTodoList, TodoItem } from "../../todoSlice";
 
 import styles from './index.module.less'
 interface TodoInputProps {
@@ -12,18 +13,23 @@ const TodoInput: FC<TodoInputProps> = () => {
   const iptRef = useRef<HTMLInputElement>()
   // const todo = useAppSelector((state) => state.todoReducer)
   const dispatch = useAppDispatch()
-  const handleClick = (e) => {
+  const handleClick = async (e) => {
     const value = iptRef.current?.value
     if (value?.trim().length) {
-      dispatch(addTodo({
-        id: Math.random().toString().slice(2),
-        desc: value?.trim(),
-        createTime: new Date().toLocaleString(),
-        updateTime: new Date().toLocaleString(),
-        complete:false
-      }))
+      await addTodo({
+        title: value,
+        createTime: new Date().toString(),
+        updateTime: new Date().toString(),
+        complete: false,
+      })
       iptRef.current!.value = ''
+      dispatch(fetchTodoList(0))
     }
+  }
+
+  const addTodo = async (data: Omit<TodoItem, "_id">) => {
+    const db = Taro.cloud.database()
+    await db.collection('todos').add({ data })
   }
   return (
     <View className={styles.todo_input}>

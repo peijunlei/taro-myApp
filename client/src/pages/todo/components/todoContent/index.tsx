@@ -1,19 +1,19 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ScrollView, View, Image, Checkbox, Text } from "@tarojs/components";
 import { FC, useEffect, useState } from "react";
-import { TodoItem, toggleTodo, removeTodo, fetchTodoList } from "../../todoSlice";
+import { TodoItem, toggleTodo, removeTodo, fetchTodoList, changePageNum } from "../../todoSlice";
 import styles from './index.module.less'
 
 import deleteIcon from '../../img/delete.png'
 import Taro from "@tarojs/taro";
 
 interface TodoContentProps {
-  nextPage: () => void;
-  noMore: boolean;
-  loadingMore: boolean;
+  nextPage?: () => void;
+  noMore?: boolean;
+  loadingMore?: boolean;
 }
 
-const TodoContent: FC<TodoContentProps> = ({ nextPage, noMore, loadingMore }) => {
+const TodoContent: FC<TodoContentProps> = () => {
 
   const todo = useAppSelector((state) => state.todoReducer)
   const dispatch = useAppDispatch()
@@ -24,7 +24,7 @@ const TodoContent: FC<TodoContentProps> = ({ nextPage, noMore, loadingMore }) =>
   }
   const handleRefresh = async () => {
     setTrigger(true)
-    await dispatch(fetchTodoList(1))
+    await dispatch(fetchTodoList(0))
     setTrigger(false)
   }
 
@@ -33,50 +33,50 @@ const TodoContent: FC<TodoContentProps> = ({ nextPage, noMore, loadingMore }) =>
     Taro.navigateTo({ url: `/pages/todo-detail/index` })
   }
   const handleremove = async (id) => {
-    await dispatch(removeTodo(id))
+    dispatch(removeTodo(id))
     Taro.showToast({ title: "删除成功" })
   }
-
+  
   const Item = ({ item }: { item: TodoItem }) => {
     return (
       <View className={styles.todo_item}>
         <Checkbox
-          value={item.id}
+          value={item._id}
           checked={item.complete}
-          onClick={() => handleCheckboxChange(item.id)}
+          onClick={() => handleCheckboxChange(item._id)}
         />
         <View
           className={`${styles.desc} ${item.complete ? styles.complete : ""}`}
           onClick={() => handleJump(item)}
-        > {item.desc}
+        > {item.title}
         </View>
-        <Image src={deleteIcon} className={styles.icon} onClick={() => handleremove(item.id)} />
+        <Image src={deleteIcon} className={styles.icon} onClick={() => handleremove(item._id)} />
       </View>
     )
   }
-  useEffect(() => {
-    console.log(todo.loading, 'todo.loading');
-  }, [todo.loading])
+
+
+
   return (
     <ScrollView
       className={styles.todo_content}
       scrollY
       refresherEnabled
-      enhanced
+      scrollWithAnimation
       refresherTriggered={trigger}
       showScrollbar={false}
       onRefresherRefresh={handleRefresh}
       onScrollToLower={() => {
-        console.log(11);
-        nextPage && nextPage()
+        if (todo.list.length >= todo.total) return;
+        dispatch(fetchTodoList(todo.pageNum + 1))
       }}
     >
       <View>
-        {todo.list.map((todo) => <Item item={todo} key={todo.id} />)}
+        {todo.list.map((todo) => <Item item={todo} key={todo._id} />)}
       </View>
       {todo.list.length === 0 && !todo.loading && <Text className={styles.empty}>没有数据哦~</Text>}
-      {noMore && <View>没有更多了</View>}
-      {loadingMore && todo.list.length !== 0 && <View>加载中...</View>}
+      {!todo.loading && todo.list.length === todo.total && <View className={styles.status}>没有更多了</View>}
+      {todo.list.length < todo.total && todo.list.length !== 0 && <View className={styles.status}>加载中...</View>}
     </ScrollView>
   );
 

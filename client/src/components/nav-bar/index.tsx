@@ -70,7 +70,7 @@ const NavBar: ForwardRefRenderFunction<NavBarRef, INavBarProps> = (
       capsuleInfo
     }
   }, [])
-  console.log('导航栏信息=>', navBarInfo);
+  // console.log('导航栏信息=>', navBarInfo);
 
 
   useImperativeHandle(ref, () => ({
@@ -92,7 +92,8 @@ const NavBar: ForwardRefRenderFunction<NavBarRef, INavBarProps> = (
     if (onBack && typeof onBack === 'function') {
       onBack()
     } else {
-      Taro.navigateBack()
+      const pages = Taro.getCurrentPages()
+      if (pages[pages.length - 2]) Taro.navigateBack()
     }
   }
   const navBarCenter = useMemo(() => {

@@ -1,5 +1,6 @@
 {
-  "miniprogramRoot": "dist/",
+  "miniprogramRoot": "client/dist/",
+  "cloudfunctionRoot": "cloud/functions/",
   "projectname": "myApp",
   "description": "项目配置文件，详见文档：https://developers.weixin.qq.com/miniprogram/dev/devtools/projectconfig.html",
   "appid": "wx8cdf925321d45960",

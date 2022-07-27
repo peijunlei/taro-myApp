@@ -3,7 +3,7 @@ import { Button, View } from "@tarojs/components";
 import Taro, { pxTransform, useDidShow, usePullDownRefresh, useShareAppMessage } from "@tarojs/taro";
 import { useAppSelector, useAppDispatch } from '@/store/hooks'
 
-import { addTodo, fetchTodoList } from './todoSlice'
+import { addTodo, fetchTodoList, changePageNum, clean } from './todoSlice'
 import TodoInput from "./components/todoInput";
 import TodoHeader from "./components/todoHeader";
 import TodoContent from "./components/todoContent";
@@ -17,28 +17,28 @@ type Props = {
 };
 
 const Todo = (props: Props) => {
-
   const navRef = useRef<NavBarRef>(null)
   const todo = useAppSelector((state) => state.todoReducer)
   const dispatch = useAppDispatch()
-  const [pageNum, setPageNum] = useState(1)
-  const [total, setTotal] = useState(100)
-  const [pageSize, setPageSize] = useState(10)
   // usePullDownRefresh(async () => {
   //   Taro.showLoading({title:"loading"})
-  //   await dispatch(fetchTodoList(1))
+  //   await dispatch(fetchTodoList(0))
   //   Taro.hideLoading()
   //   Taro.stopPullDownRefresh()
   // })
 
   const nextPage = () => {
-    if (pageNum === (total / pageSize)) return
-    setPageNum(pageNum + 1)
-  }
-  useEffect(() => {
-    dispatch(fetchTodoList(pageNum))
-  }, [pageNum])
 
+  }
+
+  useEffect(() => {
+    console.log(todo);
+    
+    dispatch(fetchTodoList(0))
+    return () => {
+      dispatch(clean())
+    }
+  }, [])
 
   return (
     <View>
@@ -47,7 +47,7 @@ const Todo = (props: Props) => {
         height: `calc(100vh - ${navRef.current?.height || 0}px)`
       }}>
         <TodoInput />
-        <TodoContent nextPage={nextPage} noMore={todo.list.length === total && !todo.loading} loadingMore={todo.list.length < total} />
+        <TodoContent />
       </View>
     </View>
 

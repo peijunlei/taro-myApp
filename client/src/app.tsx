@@ -12,6 +12,10 @@ import { msg } from './utils/msg';
 
 class App extends Component {
   // 可以使用所有的 React 生命周期方法
+  constructor(props) {
+    super(props);
+    Taro.cloud.init()
+  }
   componentDidMount() {
     // setTimeout(() => {
     //   msg.emit('handleLogin', true)
