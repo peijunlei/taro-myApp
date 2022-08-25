@@ -59,6 +59,7 @@ const TodoContent: FC<TodoContentProps> = () => {
 
   return (
     <ScrollView
+      scrollTop={200}
       className={styles.todo_content}
       scrollY
       refresherEnabled

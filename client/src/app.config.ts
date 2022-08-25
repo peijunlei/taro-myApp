@@ -10,6 +10,7 @@ export default defineAppConfig({
     'pages/sharePage/sharePage',
     'pages/virtual-list/index',
     'pages/subscribe-message/index',
+    'pages/zustand/index',
   ],
   window: {
     backgroundTextStyle: 'light',

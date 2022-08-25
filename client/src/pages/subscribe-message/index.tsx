@@ -1,12 +1,13 @@
 import { Button, View } from "@tarojs/components";
-import Taro from "@tarojs/taro";
-import { FC } from "react";
+import Taro, { useDidShow } from "@tarojs/taro";
+import { FC, useEffect, useRef } from "react";
 
 interface SubscribeMessageProps {
 
 }
 
 const SubscribeMessage: FC<SubscribeMessageProps> = () => {
+  const timer = useRef<any>()
 
   const submit = async () => {
     return new Promise((resolve, reject) => {
@@ -19,7 +20,7 @@ const SubscribeMessage: FC<SubscribeMessageProps> = () => {
   const handleClick = async () => {
 
     await Taro.requestSubscribeMessage({
-      tmplIds: ['yhPHDaZGKmtxe3AUWstu5XaLOKmv1rLEqRDLFA9jLMo','dD4twFerWD1lDHyJCOoYuwONPwm3p7wqx0nohYqqAjU'],
+      tmplIds: ['yhPHDaZGKmtxe3AUWstu5XaLOKmv1rLEqRDLFA9jLMo', 'dD4twFerWD1lDHyJCOoYuwONPwm3p7wqx0nohYqqAjU'],
       success(res) {
         console.log('订阅消息', res);
         let arr = [] as string[]
@@ -36,9 +37,25 @@ const SubscribeMessage: FC<SubscribeMessageProps> = () => {
       },
     })
   }
+
+  useDidShow(() => {
+    timer.current = setTimeout(() => {
+      console.log('back');
+
+      Taro.navigateBack()
+    }, 2000)
+  })
+  useEffect(() => {
+    return () => {
+      console.log('卸载');
+      clearTimeout(timer.current)
+    }
+  }, [])
+
   return (
     <View>
       <Button onClick={handleClick}>点击订阅</Button>
+      <Button onClick={()=>Taro.redirectTo({url:'/pages/poster/index'})}>海报</Button>
     </View>
   );
 }

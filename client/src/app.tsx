@@ -25,7 +25,7 @@ class App extends Component {
 
   // 对应 onLaunch
   onLaunch(options) {
-    console.log('options', options);
+    // console.log('options', options);
     if (TARO_ENV === 'h5') return
     wx.onAppRoute(() => {
       const pages = getCurrentPages()

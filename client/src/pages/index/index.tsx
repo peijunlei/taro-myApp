@@ -9,19 +9,19 @@ type Props = {
 
 const list = [
   {
-    title: '海报',
+    title: '海报分享',
     path: '/pages/poster/index'
   },
   {
-    title: 'LBS定位',
+    title: 'LBS定位获取',
     path: '/pages/gaode/index'
   },
   {
-    title: '分享页2022',
+    title: '点击回到顶部示例',
     path: '/pages/share/index'
   },
   {
-    title: 'todo',
+    title: 'Todo List',
     path: '/pages/todo/index'
   },
   {
@@ -29,20 +29,24 @@ const list = [
     path: '/pages/virtual-list/index'
   },
   {
-    title: '订阅消息',
+    title: '订阅消息示例',
     path: '/pages/subscribe-message/index'
+  },
+  {
+    title: 'zustand',
+    path: '/pages/zustand/index'
   },
 ]
 const Home = (props: Props) => {
 
 
 
-  useEffect(()=>{
+  useEffect(() => {
     // setTimeout(()=>{
     // Taro.navigateTo({ url: '/pages/sharePage/sharePage' })
-      
+
     // },2000)
-  },[])
+  }, [])
   return (
     <View>
       {/* <NavBar  title="首页" showBack={false} showHome={false} /> */}

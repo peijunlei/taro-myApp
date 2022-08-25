@@ -1,5 +1,5 @@
 export default definePageConfig({
-  navigationBarTitleText: '分享页',
+  navigationBarTitleText: '滚动到顶部',
   enableShareAppMessage: true,
   enableShareTimeline: true
 })
