@@ -1,35 +1,36 @@
 import useSetState from '@/hooks/useSetState'
-import { Input, View, Image, Button, Map } from '@tarojs/components'
+import { Input, View, Image, Button, Map, CoverView, CoverImage, MapProps } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { useEffect, useState } from 'react'
-
-import './index.less'
+import debounce from 'lodash/debounce';
+import Search from './components/search'
+import markIcon from './img/mark.png'
+import styles from './index.module.less'
+import useData from './store'
+import { factor } from '@/components/poster/free-poster/utils';
+import { getAround, getPoisList, getRegeo } from './api';
+import PoisList from './components/pois-list';
 interface IState {
-  lat: number;
-  lng: number;
+  citycode: string
 }
 const MapPage = () => {
   const [state, setState] = useSetState<IState>({
-    lat: 0,
-    lng: 0
+    citycode: ""
   })
 
-  const _getLocation = () => {
-    console.log(111);
-  }
+  const { keywords, setKeywords, setPoisList, updateCenter,lng,lat } = useData()
+
   const getLocation = () => {
-    let _locationChangeFn = (res) => {
-      setState({ lat: res.latitude, lng: res.longitude }) // 设置经纬度信息
-      Taro.setStorageSync("latlng", `${res.latitude},${res.longitude}`)
-      console.log(1111);
-      Taro.offLocationChange(_locationChangeFn)
-    }
-    Taro.startLocationUpdate({
-      success() {
-        Taro.onLocationChange(_locationChangeFn)
+    Taro.getLocation({
+      type: "gcj02",
+      async success(result) {
+        const res = await getRegeo({ location: `${result.longitude},${result.latitude}` }) as any
+        updateCenter(result.longitude, result.latitude)
+        setState({ citycode: res.regeocode.addressComponent.citycode }) // 设置经纬度信息
       },
       fail(err) {
-      }
+        Taro.showToast({ title: err.errMsg })
+      },
     })
   }
   const init = () => {
@@ -67,19 +68,42 @@ const MapPage = () => {
 
 
   }
+
+  const handleSearch = async (val: string) => {
+    if (!val.trim()) return
+    setKeywords(val)
+    const res = await getPoisList({ keywords: val, region: state.citycode })
+    console.log(res);
+    setPoisList((res as any).pois)
+
+
+  }
   useEffect(() => {
     init()
+    console.log(keywords);
+
   }, [])
   return (
-    <View className='map_container'>
-      <View>经度:{state.lat} </View>
-      <View>纬度:{state.lng} </View>
+    <View className={styles.container}>
+      <Search onChange={debounce((e) => handleSearch(e), 1000)} />
       <Map
-        style={{ height: '50vh', width: '100vw' }}
-        latitude={state.lat}
-        longitude={state.lng}
+        className={styles.map}
+        latitude={lat}
+        longitude={lng}
         showLocation
-      />
+        onRegionChange={async (e) => {
+          if (e.causedBy === 'drag' && e.type === 'end') {
+            const location = `${e.detail.centerLocation.longitude},${e.detail.centerLocation.latitude}`
+            const res = await getAround({ location }) as any
+            setPoisList(res.pois)
+          }
+        }}
+      >
+        <View>
+          <Image src={markIcon} className={styles.mark}></Image>
+        </View>
+      </Map>
+      <PoisList />
     </View>
   )
 }
