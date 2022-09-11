@@ -1,7 +1,7 @@
 import useSetState from '@/hooks/useSetState'
-import { Input, View, Image, Button, Map, CoverView, CoverImage, MapProps } from '@tarojs/components'
+import { Input, View, Image, Button, Map, Picker } from '@tarojs/components'
 import Taro from '@tarojs/taro'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import debounce from 'lodash/debounce';
 import Search from './components/search'
 import markIcon from './img/mark.png'
@@ -10,23 +10,33 @@ import useData from './store'
 import { factor } from '@/components/poster/free-poster/utils';
 import { getAround, getPoisList, getRegeo } from './api';
 import PoisList from './components/pois-list';
+import isArray from 'lodash/isArray';
 interface IState {
-  citycode: string
+  citycode: string;
+  cityName: string;
+  adcode: string;
 }
 const MapPage = () => {
   const [state, setState] = useSetState<IState>({
-    citycode: ""
+    citycode: "",
+    cityName: "",
+    adcode: ""
   })
 
-  const { keywords, setKeywords, setPoisList, updateCenter,lng,lat } = useData()
-
+  const { keywords, setKeywords, setPoisList, updateCenter, lng, lat } = useData()
+  const formatCode = useMemo(() => {
+    if (!state.adcode) return []
+    const arr = [state.adcode.substring(0, 2) + "0000", state.adcode.substring(0, 4) + "00", state.adcode]
+    return arr
+  }, [state.adcode])
   const getLocation = () => {
     Taro.getLocation({
       type: "gcj02",
       async success(result) {
         const res = await getRegeo({ location: `${result.longitude},${result.latitude}` }) as any
         updateCenter(result.longitude, result.latitude)
-        setState({ citycode: res.regeocode.addressComponent.citycode }) // 设置经纬度信息
+        const { citycode, city, adcode, province } = res.regeocode.addressComponent
+        setState({ citycode, cityName: isArray(city) ? province : city, adcode }) // 设置经纬度信息
       },
       fail(err) {
         Taro.showToast({ title: err.errMsg })
@@ -72,7 +82,7 @@ const MapPage = () => {
   const handleSearch = async (val: string) => {
     if (!val.trim()) return
     setKeywords(val)
-    const res = await getPoisList({ keywords: val, region: state.citycode })
+    const res = await getPoisList({ keywords: val, region: state.cityName })
     console.log(res);
     setPoisList((res as any).pois)
 
@@ -81,11 +91,24 @@ const MapPage = () => {
   useEffect(() => {
     init()
     console.log(keywords);
-
   }, [])
+
   return (
     <View className={styles.container}>
-      <Search onChange={debounce((e) => handleSearch(e), 1000)} />
+      <View className={styles.header}>
+        <Picker
+          mode='region'
+          value={formatCode}
+          onChange={(e) => {
+            console.log(e);
+            setState({ citycode:e.detail.code[1],cityName:e.detail.value[1],adcode:e.detail.code[2]})
+          }}
+        >
+          <View className={styles.city}>{state.cityName || '定位中...'}</View>
+        </Picker>
+        <Search onChange={debounce((e) => handleSearch(e), 1000)} onConfirm={handleSearch} />
+      </View>
+
       <Map
         className={styles.map}
         latitude={lat}
@@ -104,7 +127,7 @@ const MapPage = () => {
         </View>
       </Map>
       <PoisList />
-    </View>
+    </View >
   )
 }
 
