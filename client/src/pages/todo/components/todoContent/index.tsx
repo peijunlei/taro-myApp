@@ -1,11 +1,14 @@
+import Taro from "@tarojs/taro";
+
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ScrollView, View, Image, Checkbox, Text } from "@tarojs/components";
 import { FC, useEffect, useState } from "react";
-import { TodoItem, toggleTodo, removeTodo, fetchTodoList, changePageNum } from "../../todoSlice";
-import styles from './index.module.less'
+import styles from './index.module.scss'
 
 import deleteIcon from '../../img/delete.png'
-import Taro from "@tarojs/taro";
+import useTodoStore from "../../store";
+import { removeTodo } from "../../api";
+import { TodoItem } from "../../types";
 
 interface TodoContentProps {
   nextPage?: () => void;
@@ -13,50 +16,19 @@ interface TodoContentProps {
   loadingMore?: boolean;
 }
 
-const TodoContent: FC<TodoContentProps> = () => {
+function TodoContent() {
 
-  const todo = useAppSelector((state) => state.todoReducer)
-  const dispatch = useAppDispatch()
+  let { list, loading, total, pageNum, setValue, fetchTodos } = useTodoStore()
 
   const [trigger, setTrigger] = useState(false)
-  const handleCheckboxChange = (id) => {
-    dispatch(toggleTodo(id))
-  }
+
   const handleRefresh = async () => {
     setTrigger(true)
-    await dispatch(fetchTodoList(0))
+    setValue('pageNum', 0)
+    await fetchTodos({ pageNum: 0 })
     setTrigger(false)
   }
-
-  const handleJump = (item) => {
-    Taro.preload(item)
-    Taro.navigateTo({ url: `/pages/todo-detail/index` })
-  }
-  const handleremove = async (id) => {
-    dispatch(removeTodo(id))
-    Taro.showToast({ title: "删除成功" })
-  }
-  
-  const Item = ({ item }: { item: TodoItem }) => {
-    return (
-      <View className={styles.todo_item}>
-        <Checkbox
-          value={item._id}
-          checked={item.complete}
-          onClick={() => handleCheckboxChange(item._id)}
-        />
-        <View
-          className={`${styles.desc} ${item.complete ? styles.complete : ""}`}
-          onClick={() => handleJump(item)}
-        > {item.title}
-        </View>
-        <Image src={deleteIcon} className={styles.icon} onClick={() => handleremove(item._id)} />
-      </View>
-    )
-  }
-
-
-
+  if (loading && list.length === 0) return null;
   return (
     <ScrollView
       scrollTop={200}
@@ -68,19 +40,47 @@ const TodoContent: FC<TodoContentProps> = () => {
       showScrollbar={false}
       onRefresherRefresh={handleRefresh}
       onScrollToLower={() => {
-        if (todo.list.length >= todo.total) return;
-        dispatch(fetchTodoList(todo.pageNum + 1))
+        if (list.length >= total) return;
+        setValue('pageNum', pageNum++)
+        fetchTodos({ pageNum })
       }}
     >
       <View>
-        {todo.list.map((todo) => <Item item={todo} key={todo._id} />)}
+        {list.map((todo) => <Item data={todo} key={todo._id} />)}
       </View>
-      {todo.list.length === 0 && !todo.loading && <Text className={styles.empty}>没有数据哦~</Text>}
-      {!todo.loading && todo.list.length === todo.total && <View className={styles.status}>没有更多了</View>}
-      {todo.list.length < todo.total && todo.list.length !== 0 && <View className={styles.status}>加载中...</View>}
+      {list.length === 0 && <Text className={styles.empty}>没有数据哦~</Text>}
+      {list.length !== 0 && list.length === total && <View className={styles.status}>没有更多了</View>}
+      {list.length < total && list.length !== 0 && <View className={styles.status}>加载中...</View>}
     </ScrollView>
   );
 
 }
-
+function Item({ data }: { data: TodoItem }) {
+  const { fetchTodos } = useTodoStore()
+  const handleJump = (item) => {
+    Taro.preload(item)
+    Taro.navigateTo({ url: `/pages/todo-detail/index` })
+  }
+  const handleremove = async (id) => {
+    await removeTodo(id)
+    await fetchTodos({ pageNum: 0 })
+    Taro.showToast({ title: "删除成功", icon: 'none' })
+  }
+  return (
+    <View className={styles.todo_item}>
+      <View
+        className={styles.desc}
+        onClick={() => handleJump(data)}
+      >
+        <View className={styles.title}>
+          {data.description}
+        </View>
+        <View className={styles.time}>
+          {data.createTime}
+        </View>
+      </View>
+      <Image src={deleteIcon} className={styles.icon} onClick={() => handleremove(data._id)} />
+    </View>
+  )
+}
 export default TodoContent;

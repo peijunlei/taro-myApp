@@ -1,8 +1,7 @@
 import Taro from '@tarojs/taro';
 import { View, Text } from '@tarojs/components';
 import { forwardRef, ForwardRefRenderFunction, useImperativeHandle, useMemo } from 'react';
-import { FC } from 'react';
-import './index.less';
+import './index.scss';
 import { toRpx } from '@/utils';
 
 

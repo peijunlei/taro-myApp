@@ -8,7 +8,7 @@
     {
       "name": "myTimer",
       "type": "timer",
-      "config": "*/50 * * * * * *"
+      "config": "* * * * * * *"
     }
   ]
 }

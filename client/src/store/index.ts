@@ -1,14 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
-import logger from 'redux-logger'
-import todoReducer from '@/pages/todo/todoSlice';
+
 export const store = configureStore({
   reducer: {
-    todoReducer
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-    serializableCheck:{
-    }
-  })
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

@@ -1,16 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Button, View } from "@tarojs/components";
+import { Button, View, Image } from "@tarojs/components";
 import Taro, { pxTransform, useDidShow, usePullDownRefresh, useShareAppMessage } from "@tarojs/taro";
-import { useAppSelector, useAppDispatch } from '@/store/hooks'
 
-import { addTodo, fetchTodoList, changePageNum, clean } from './todoSlice'
-import TodoInput from "./components/todoInput";
-import TodoHeader from "./components/todoHeader";
 import TodoContent from "./components/todoContent";
 
-import styles from './index.module.less'
+import styles from './index.module.scss'
 import NavBar, { NavBarRef } from "@/components/nav-bar";
-import { isH5 } from "@/utils";
+
+import addIcon from '@/assets/common/add.png';
+import useTodoStore from "./store";
 // import NavBar from "@/components/nav-bar";
 type Props = {
 
@@ -18,36 +16,20 @@ type Props = {
 
 const Todo = (props: Props) => {
   const navRef = useRef<NavBarRef>(null)
-  const todo = useAppSelector((state) => state.todoReducer)
-  const dispatch = useAppDispatch()
-  // usePullDownRefresh(async () => {
-  //   Taro.showLoading({title:"loading"})
-  //   await dispatch(fetchTodoList(0))
-  //   Taro.hideLoading()
-  //   Taro.stopPullDownRefresh()
-  // })
-
-  const nextPage = () => {
-
-  }
-
-  useEffect(() => {
-    console.log(todo);
-    
-    dispatch(fetchTodoList(0))
-    return () => {
-      dispatch(clean())
-    }
-  }, [])
+  const { setValue, fetchTodos } = useTodoStore()
+  useDidShow(async () => {
+    setValue('pageNum', 0)
+    fetchTodos({ pageNum: 0 })
+  })
 
   return (
-    <View>
-      {!isH5 && <NavBar title="todo" showSearch searchText="裴俊磊" ref={navRef} />}
-      <View className={styles.todo} style={{
-        height: `calc(100vh - ${navRef.current?.height || 0}px)`
-      }}>
-        <TodoInput />
+    <View className='container'>
+      <NavBar title='待办事项' ref={navRef} />
+      <View className={styles.todo} style={{ height: `calc(100vh - ${navRef.current?.height!}px)` }}>
         <TodoContent />
+        <View className={styles.add} onClick={() => Taro.navigateTo({ url: '/pages/todo-add/index' })}>
+          <Image src={addIcon} className={styles.img} />
+        </View>
       </View>
     </View>
 

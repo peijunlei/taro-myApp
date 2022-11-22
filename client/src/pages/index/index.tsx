@@ -49,7 +49,6 @@ const Home = (props: Props) => {
   }, [])
   return (
     <View>
-      {/* <NavBar  title="首页" showBack={false} showHome={false} /> */}
       {
         list.map(v => <Button key={v.path} onClick={() => Taro.navigateTo({ url: v.path })}>{v.title}</Button>)
       }

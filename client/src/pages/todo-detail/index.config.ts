@@ -1,5 +1,5 @@
 export default definePageConfig({
-  navigationBarTitleText: 'todo详情',
+  navigationBarTitleText: 'Todo详情',
   enableShareAppMessage: true,
   enableShareTimeline:true,
   enablePullDownRefresh: true,

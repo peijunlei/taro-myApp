@@ -23,7 +23,7 @@ const config = {
   defineConstants: {
     TARO_ENV: JSON.stringify(process.env.TARO_ENV)
   },
-  
+
   copy: {
     patterns: [
     ],
@@ -31,8 +31,19 @@ const config = {
     }
   },
   framework: 'react',
+  sass: {
+    resource: [
+      path.resolve(__dirname, '..', 'src/styles/theme.scss'),
+      path.resolve(__dirname, '..', 'src/styles/mixin.scss')
+
+    ]
+  },
   mini: {
-    hot:true,
+    hot: true,
+
+    webpackChain(chain, webpack) {
+      // chain.plugin('analyzer').use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin, [])
+    },
     postcss: {
       pxtransform: {
         enable: true,

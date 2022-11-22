@@ -1,0 +1,16 @@
+.todo {
+  flex: 1;
+  .add {
+    position: fixed;
+    padding: 20px;
+    right: 100px;
+    bottom: 100px;
+    background-color: $text-color;
+    border-radius: 50%;
+    @include flex;
+    .img {
+      width: 80px;
+      height: 80px;
+    }
+  }
+}

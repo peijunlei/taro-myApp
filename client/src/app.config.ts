@@ -4,8 +4,9 @@ export default defineAppConfig({
     'pages/gaode/index',
     'pages/poster/index',
     'pages/share/index',
-    'pages/todo/index',
+    "pages/todo/index",
     'pages/todo-detail/index',
+    'pages/todo-add/index',
     'pages/user-center/index',
     'pages/sharePage/sharePage',
     'pages/virtual-list/index',
@@ -22,17 +23,26 @@ export default defineAppConfig({
   tabBar: {
     color: "#333",
     selectedColor: "#FB5629",
-    list: [{
-      iconPath:"./assets/tabbar/home.png",
-      selectedIconPath:"./assets/tabbar/home_active.png",
-      pagePath: "pages/index/index",
-      text: "首页"
-    }, {
-      iconPath:"./assets/tabbar/user.png",
-      selectedIconPath:"./assets/tabbar/user_active.png",
-      pagePath: "pages/user-center/index",
-      text: "我的"
-    }]
+    list: [
+      {
+        iconPath: "./assets/tabbar/home.png",
+        selectedIconPath: "./assets/tabbar/home_active.png",
+        pagePath: "pages/index/index",
+        text: "首页"
+      },
+      {
+        iconPath: "./assets/tabbar/home.png",
+        selectedIconPath: "./assets/tabbar/home_active.png",
+        pagePath: "pages/todo/index",
+        text: "待办"
+      },
+      {
+        iconPath: "./assets/tabbar/user.png",
+        selectedIconPath: "./assets/tabbar/user_active.png",
+        pagePath: "pages/user-center/index",
+        text: "我的"
+      }
+    ]
   },
   permission: {
     "scope.userLocation": {

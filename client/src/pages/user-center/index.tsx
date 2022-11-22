@@ -1,7 +1,7 @@
 import { Button, View, Text, Image, Input } from "@tarojs/components";
 import Taro, { useDidShow, UserInfo } from "@tarojs/taro";
 import { useEffect, useMemo, useState } from "react";
-import styles from './index.module.less'
+import styles from './index.module.scss';
 const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
 type Props = {
 

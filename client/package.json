@@ -9,6 +9,8 @@
     "css": "less"
   },
   "scripts": {
+    "start": "npm run build:weapp -- --watch",
+    "build": "taro build --type weapp",
     "build:weapp": "taro build --type weapp",
     "build:w": "set NODE_ENV=production && taro build --type weapp --watch",
     "build:swan": "taro build --type swan",
@@ -69,7 +71,8 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "redux-logger": "^3.0.6",
     "stylelint": "9.3.0",
-    "typescript": "^4.1.0"
+    "typescript": "^4.1.0",
+    "webpack-bundle-analyzer": "^4.7.0"
   },
   "resolutions": {
     "@types/react": "^17.0.2"
