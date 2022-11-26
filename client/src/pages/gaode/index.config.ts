@@ -1,3 +1,3 @@
 export default definePageConfig({
-  navigationBarTitleText: 'LBS定位',
+  navigationBarTitleText: '高德定位',
 })

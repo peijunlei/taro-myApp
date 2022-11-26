@@ -40,10 +40,14 @@ export default defineAppConfig({
         iconPath: "./assets/tabbar/user.png",
         selectedIconPath: "./assets/tabbar/user_active.png",
         pagePath: "pages/user-center/index",
-        text: "我的"
+        text: "天气"
       }
     ]
   },
+  requiredPrivateInfos: [
+    'getLocation',
+    'chooseLocation'
+  ],
   permission: {
     "scope.userLocation": {
       "desc": "您的位置信息将用于展示您所在城市的信息"

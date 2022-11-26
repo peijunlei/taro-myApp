@@ -5,6 +5,7 @@ import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 
 import { store } from './store'
+import './styles/font/qweather-icons.css';
 import './app.scss';
 
 

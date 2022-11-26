@@ -96,16 +96,6 @@ const MapPage = () => {
   return (
     <View className={styles.container}>
       <View className={styles.header}>
-        <Picker
-          mode='region'
-          value={formatCode}
-          onChange={(e) => {
-            console.log(e);
-            setState({ citycode:e.detail.code[1],cityName:e.detail.value[1],adcode:e.detail.code[2]})
-          }}
-        >
-          <View className={styles.city}>{state.cityName || '定位中...'}</View>
-        </Picker>
         <Search onChange={debounce((e) => handleSearch(e), 1000)} onConfirm={handleSearch} />
       </View>
 

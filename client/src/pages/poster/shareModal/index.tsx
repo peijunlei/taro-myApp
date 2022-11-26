@@ -7,14 +7,17 @@ import './index.less'
 
 interface ShareModalProps {
   onClose: () => void;
-  userInfo?: UserInfo
-  qrcode?: string
 }
-const defaultAvatarUrl = 'http://tmp/eas3BBJqrs5f2ab119855d4348c4efe11661dddf7608.jpeg'
-const ShareModal: FC<ShareModalProps> = ({ onClose, userInfo, qrcode }) => {
+const defaultAvatarUrl = 'https://picsum.photos/200';
+
+
+function ShareModal(props: ShareModalProps) {
+  const { onClose } = props
   const poster = useRef<PosterRef>(null);
+  const [qrcode, setCode] = useState<string>()
 
   const getList = (): PosterItemConfig[] => {
+    const userInfo = Taro.getStorageSync('user_info') || undefined
     return [
       {
         type: 'shape',
@@ -145,10 +148,24 @@ const ShareModal: FC<ShareModalProps> = ({ onClose, userInfo, qrcode }) => {
         width: 120,
         height: 120,
         radius: 60,
-        src: qrcode!,
+        src: qrcode,
       },
     ]
   }
+
+  async function getCode() {
+    const qrcode = await fetchQrcode()
+    if (qrcode) {
+      setCode(qrcode)
+    } else {
+      Taro.hideLoading()
+      Taro.showToast({ title: '操作失败', icon: 'none' })
+      onClose()
+    }
+  }
+  useEffect(() => {
+    getCode()
+  }, [])
 
   return (
     <View className="share-modal-mask-wrapper">
@@ -162,11 +179,11 @@ const ShareModal: FC<ShareModalProps> = ({ onClose, userInfo, qrcode }) => {
           disableRerender
           debug
           showMenuByLongpress
-          onRender={(url) => {
+          onRender={() => {
             Taro.hideLoading()
           }}
           onRenderFail={() => Taro.hideLoading()}
-          onClose={() => onClose && onClose()}
+          onClose={onClose}
           list={getList}
         />
       }
