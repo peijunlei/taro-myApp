@@ -20,7 +20,7 @@
     "resolveJsonModule": true,
     "paths": {
       "@/*": [
-        "src/*"
+        "./src/*"
       ],
       "@/components/*": [
         "./src/components/*"
@@ -39,6 +39,9 @@
       ],
       "@/pages/*": [
         "./src/pages/*"
+      ],
+      "@/cache/*": [
+        "./src/cache/*"
       ]
     },
     "typeRoots": [

@@ -29,4 +29,14 @@ export const getWeather3d = (params) => {
 export const getWeatherNow = (params) => {
   return request('https://devapi.qweather.com/v7/weather/now', params)
 }
+/**空气质量 */
+export const getWeatherAir = (params) => {
+  return request('https://devapi.qweather.com/v7/air/now', params)
+}
+/**穿衣指数 */
+export const getWeatherDress= (params) => {
+  return request('https://devapi.qweather.com/v7/indices/1d?type=3', params)
+}
+
+
 

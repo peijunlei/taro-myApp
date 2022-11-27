@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Button, View } from '@tarojs/components';
 import ShareModal from './shareModal';
 import Taro from '@tarojs/taro';
+import LocalCache from '@/cache';
 
 function PosterPage() {
   const [visible, setVisible] = useState(false)
@@ -10,7 +11,7 @@ function PosterPage() {
     Taro.getUserProfile({
       desc: '用于完善会员资料',
       success(res) {
-        Taro.setStorageSync('user_info', res.userInfo)
+        Taro.setStorageSync(LocalCache.USER_INFO, res.userInfo)
       },
       complete() {
         setVisible(true)

@@ -1,3 +1,4 @@
+import LocalCache from "@/cache";
 import Poster, { PosterItemConfig, PosterRef } from "@/components/poster";
 import { View } from "@tarojs/components";
 import Taro, { UserInfo } from "@tarojs/taro";
@@ -17,7 +18,7 @@ function ShareModal(props: ShareModalProps) {
   const [qrcode, setCode] = useState<string>()
 
   const getList = (): PosterItemConfig[] => {
-    const userInfo = Taro.getStorageSync('user_info') || undefined
+    const userInfo = Taro.getStorageSync(LocalCache.USER_INFO) || undefined
     return [
       {
         type: 'shape',

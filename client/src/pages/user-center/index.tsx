@@ -1,13 +1,13 @@
 import useSetState from "@/hooks/useSetState";
 import { Button, View, Text, Image, Input, Canvas } from "@tarojs/components";
-import Taro, { useDidShow, UserInfo } from "@tarojs/taro";
-import { useEffect, useMemo, useState } from "react";
+import Taro, { useDidShow, usePullDownRefresh } from "@tarojs/taro";
+import { useEffect } from "react";
 import styles from './index.module.scss';
-
+import { AirQuality } from './constants'
 
 import bgimg from '@/assets/common/weather/cloud.jpg'
 import { getRegeo } from "../gaode/api";
-import { getWeather3d, getWeatherNow } from "./api";
+import { getWeather3d, getWeatherAir, getWeatherNow } from "./api";
 import Icon from "@/components/Icon";
 type Props = {
 
@@ -27,15 +27,24 @@ function Weather(props: Props) {
       text: '数据获取中...',
       humidity: '0',
       feelsLike: '0',
-      icon: '100'
-    },
-    today: {
-      temp: 'N/A',
-      weather: '暂无'
+      icon: '100',
+      windDir: 'N/A',
+      windScale: '1'
     },
     tomorrow: {
       temp: 'N/A',
-      weather: '暂无'
+      textDay: '暂无',
+      iconDay: '100'
+    },
+    after_tomorrow: {
+      temp: 'N/A',
+      textDay: '暂无',
+      iconDay: '100'
+    },
+    air: {
+      category: '优',
+      aqi: '0',
+      level: '1'
     },
     // hourlyData
     hourlyData: [],
@@ -44,16 +53,21 @@ function Weather(props: Props) {
     width: 375,
     scale: 1,
     address: '定位中',
-    latitude: 40.056974,
-    longitude: 116.307689
+    latitude: 0,
+    longitude: 0
   })
-  const { paddingTop, address, current, daily } = data
-  const { backgroundImage, backgroundColor } = data
+  const { paddingTop, address, current, tomorrow, after_tomorrow, latitude, longitude, air } = data
+
+  usePullDownRefresh(async () => {
+
+    await refresh(longitude, latitude)
+    Taro.stopPullDownRefresh()
+
+  })
+
   function init() {
     Taro.getSystemInfo({
       success: (res) => {
-        console.log(res);
-
         let width = res.windowWidth
         let scale = width / 375
         setData({
@@ -68,44 +82,79 @@ function Weather(props: Props) {
   function getLocation() {
     Taro.getLocation({
       type: 'gcj02',
-      success: (res) => {
+      success: async (res) => {
         let { longitude, latitude } = res
-        console.log(res);
-
         setData({
           latitude,
           longitude
         })
-        getAddress(longitude, latitude)
+        refresh(longitude, latitude)
       }
-
     })
   }
-  // 处理逆经纬度
-  async function getAddress(longitude, latitude) {
 
-    Taro.showLoading({ title: '定位中' })
+
+  function refresh(longitude, latitude) {
+    return new Promise(async (resolve) => {
+      Taro.showLoading({ title: '加载中...', mask: true })
+      await getAddress(longitude, latitude);
+      await getWeatherData(longitude, latitude)
+      await getWeatherAirData(longitude, latitude)
+      Taro.hideLoading()
+      resolve(true)
+    })
+  }
+  /**
+   * 逆经纬度获取地址
+   * @param longitude 
+   * @param latitude 
+   */
+  async function getAddress(longitude, latitude) {
     const res = await getRegeo({ location: `${longitude},${latitude}` }) as any
     setData({ address: res.regeocode?.formatted_address || '南京' })
-    getWeatherData()
   }
 
-  async function getWeatherData() {
-    const { longitude, latitude } = data;
+  /**
+   * 获取天气信息
+   * @param longitude 
+   * @param latitude 
+   */
+  async function getWeatherData(longitude, latitude) {
     const location = `${longitude},${latitude}`
     const params = { location }
-    try {
-      const [res1, res2] = await Promise.all([getWeatherNow(params), getWeather3d(params)]) as any[]
-      console.log(res1, res2);
-      const now = res1.now;
-      const daily = res2.daily
-      if (now && daily) {
-        setData({ current: now, daily })
-      }
-    } catch (error) {
-
+    const [res1, res2] = await Promise.all([getWeatherNow(params), getWeather3d(params)]) as any[]
+    const now = res1.now;
+    const daily = res2.daily as any[]
+    if (now && daily && daily.length > 0) {
+      setData({
+        current: now,
+        tomorrow: {
+          temp: `${daily[1].tempMin}/${daily[1].tempMax}`,
+          iconDay: daily[1].iconDay,
+          textDay: daily[1].textDay
+        },
+        after_tomorrow: {
+          temp: `${daily[2].tempMin}/${daily[2].tempMax}`,
+          iconDay: daily[2].iconDay,
+          textDay: daily[2].textDay
+        }
+      })
     }
-    Taro.hideLoading()
+  }
+  async function getWeatherAirData(longitude, latitude) {
+    const location = `${longitude},${latitude}`
+    const params = { location }
+    const res = await getWeatherAir(params) as any
+    let now = res.now
+    if (now) {
+      setData({
+        air: {
+          category: now.category,
+          aqi: now.aqi,
+          level: now.level
+        }
+      })
+    }
   }
 
   function chooseLocation() {
@@ -117,23 +166,29 @@ function Weather(props: Props) {
           latitude: Number(latitude),
           address: name || address
         })
-
+        refresh(longitude, latitude)
       }
     })
   }
+  useDidShow(() => {
 
+  })
   useEffect(() => {
     init()
   }, [])
 
   return (
-    <View className={styles.wrapper} style={{ backgroundImage: `url(${backgroundImage})` }}>
+    <View className={styles.wrapper} >
       <View className={styles.container} style={{ paddingTop: paddingTop }}>
         <View className={styles.location} onClick={chooseLocation}>
-          <Icon type={current.icon} />
           {address}
         </View>
         <View className={styles.now}>
+          {/* 空气质量 */}
+          <View className={styles.air}>
+            <View className={styles.level} style={{ backgroundColor: AirQuality[air.level] }}></View>
+            <View>{`${air.category} ${air.aqi}`}</View>
+          </View>
           <View className={styles.current}>
             <View className={styles.temp}>
               <Text>{current.temp}</Text>
@@ -146,10 +201,38 @@ function Weather(props: Props) {
             <View className={styles.humidity}>
               <Text className={styles.one}>湿度&nbsp;{current.humidity}%</Text>
               <View className={styles.line}></View>
-              <Text>体感&nbsp;{current.feelsLike}℃</Text>
+              <Text>{current.windDir}&nbsp;{current.windScale}级</Text>
+            </View>
+            <View >
+              未来有诗和远方
             </View>
           </View>
           <View className={styles.future}>
+            <View className={styles.tomorrow}>
+              <View className={styles.left}>
+                <View>明天</View>
+                <View>{tomorrow.textDay}</View>
+              </View>
+              <View className={styles.right}>
+                <View>{tomorrow.temp}℃</View>
+                <View>
+                  <Icon type={tomorrow.iconDay}></Icon>
+                </View>
+              </View>
+            </View>
+            <View className={styles.line}></View>
+            <View className={styles.after_tomorrow}>
+              <View className={styles.left}>
+                <View>后天</View>
+                <View>{after_tomorrow.textDay}</View>
+              </View>
+              <View className={styles.right}>
+                <View>{after_tomorrow.temp}℃</View>
+                <View>
+                  <Icon type={after_tomorrow.iconDay}></Icon>
+                </View>
+              </View>
+            </View>
           </View>
         </View>
         {/* <View className="two-days">

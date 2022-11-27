@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button, View, Image } from "@tarojs/components";
-import Taro, { pxTransform, useDidShow, usePullDownRefresh, useShareAppMessage } from "@tarojs/taro";
+import Taro, {  useDidShow } from "@tarojs/taro";
 
 import TodoContent from "./components/todoContent";
 

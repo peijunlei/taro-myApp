@@ -19,6 +19,7 @@ url("./fonts/qweather-icons.ttf?5bb5b475709c49961682eda055eb3dc5") format("truet
   font-weight: normal !important;
   font-variant: normal;
   text-transform: none;
+  font-size: 32px!important;
   line-height: 1;
   vertical-align: -.125em;
   -webkit-font-smoothing: antialiased;

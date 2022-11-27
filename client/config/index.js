@@ -12,13 +12,14 @@ const config = {
   outputRoot: 'dist',
   plugins: [],
   alias: {
-    '@/*': path.resolve(__dirname, '..', 'src/*'),
     '@/components': path.resolve(__dirname, '..', 'src/components'),
     '@/utils': path.resolve(__dirname, '..', 'src/utils'),
     '@/assets': path.resolve(__dirname, '..', 'src/assets'),
     '@/store': path.resolve(__dirname, '..', 'src/store'),
     '@/hooks': path.resolve(__dirname, '..', 'src/hooks'),
     '@/pages': path.resolve(__dirname, '..', 'src/pages'),
+    '@/cache': path.resolve(__dirname, '..', 'src/cache'),
+
   },
   defineConstants: {
     TARO_ENV: JSON.stringify(process.env.TARO_ENV)
