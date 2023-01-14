@@ -1,17 +1,24 @@
 export default defineAppConfig({
   pages: [
     'pages/index/index',
-    'pages/gaode/index',
-    'pages/poster/index',
-    'pages/share/index',
     "pages/todo/index",
-    'pages/todo-detail/index',
-    'pages/todo-add/index',
     'pages/user-center/index',
-    'pages/sharePage/sharePage',
-    'pages/virtual-list/index',
-    'pages/subscribe-message/index',
-    'pages/zustand/index',
+  ],
+  subpackages: [
+    {
+      root: "packageA",
+      pages: [
+        'demo/gaode/index',
+        'demo/poster/index',
+        'demo/share/index',
+        'demo/sharePage/index',
+        'demo/subscribe-message/index',
+        'demo/todo-add/index',
+        'demo/todo-detail/index',
+        'demo/virtual-list/index',
+        'demo/zustand/index',
+      ]
+    }
   ],
   window: {
     backgroundTextStyle: 'light',

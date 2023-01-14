@@ -14,7 +14,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     Taro.cloud.init({
-      env: "dev-1gx4rw5dc32c2f95",
+      env: "dev-3ghsvhjf1466a56a",
       traceUser: true,
     })
   }

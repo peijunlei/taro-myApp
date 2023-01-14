@@ -11,6 +11,8 @@ export interface TodoState {
   loading: boolean;
   total: number;
   pageNum: number;
+  top:number;
+  showTop:boolean;
   setValue: (key: string, value: any) => void;
   fetchTodos: (params: TodoRequest) => Promise<void>
 }
@@ -23,6 +25,8 @@ const useTodoStore = create<TodoState>()(
       loading: false,
       total: 0,
       pageNum: 0,
+      top:0,
+      showTop:false,
       setValue: (key, value) => set((state) => {
         state[key] = value;
       }),

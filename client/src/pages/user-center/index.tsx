@@ -6,9 +6,10 @@ import styles from './index.module.scss';
 import { AirQuality } from './constants'
 
 import bgimg from '@/assets/common/weather/cloud.jpg'
-import { getRegeo } from "../gaode/api";
+import { getRegeo } from "../../packageA/demo/gaode/api";
 import { getWeather3d, getWeatherAir, getWeatherNow } from "./api";
 import Icon from "@/components/Icon";
+
 type Props = {
 
 };
