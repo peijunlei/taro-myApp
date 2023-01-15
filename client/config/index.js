@@ -37,14 +37,13 @@ const config = {
     resource: [
       path.resolve(__dirname, '..', 'src/styles/theme.scss'),
       path.resolve(__dirname, '..', 'src/styles/mixin.scss')
-
     ]
   },
   mini: {
     hot: true,
 
     webpackChain(chain, webpack) {
-      // chain.plugin('analyzer').use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin, [])
+      chain.plugin('analyzer').use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin, [])
     },
     postcss: {
       pxtransform: {

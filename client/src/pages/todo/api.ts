@@ -5,6 +5,7 @@ export interface TodoRequest {
   pageNum?: number;
   pageSize?: number;
   keyWords?: string;
+  complete?: boolean;
 }
 
 export interface TodoResponse {
@@ -13,10 +14,18 @@ export interface TodoResponse {
 }
 /**查询 */
 export async function fetchTodoList(params: TodoRequest): Promise<TodoResponse> {
-  const { pageNum = 0, pageSize = 10 } = params;
+  const { pageNum = 0, pageSize = 10,complete } = params;
   const db = Taro.cloud.database()
-  const result = await db.collection('todos').where({}).count();
-  const res = await db.collection('todos').orderBy('createTime', 'desc').skip(pageNum * pageSize).limit(pageSize).get()
+  const result = await db.collection('todos').where({complete}).count();
+  const res = await db.collection('todos')
+    .where({
+      complete
+    })
+    .skip(pageNum * pageSize)
+    .limit(pageSize)
+    .orderBy('createTime', 'desc')
+
+    .get()
   return {
     data: res.data as TodoItem[],
     total: result.total,
@@ -34,6 +43,6 @@ export async function removeTodo(id: string): Promise<Taro.DB.Query.IRemoveResul
 /**添加 */
 export async function addTodo(item: Pick<TodoItem, 'description'>): Promise<Taro.DB.Query.IAddResult> {
   const db = Taro.cloud.database()
-  const res = await db.collection('todos').add({ data: { ...item, createTime: db.serverDate() } })
+  const res = await db.collection('todos').add({ data: { ...item, createTime: db.serverDate(), complete: false } })
   return res
 }

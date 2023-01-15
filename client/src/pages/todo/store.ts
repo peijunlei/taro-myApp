@@ -11,8 +11,9 @@ export interface TodoState {
   loading: boolean;
   total: number;
   pageNum: number;
-  top:number;
-  showTop:boolean;
+  top: number;
+  showTop: boolean;
+  tabKey: string | number;
   setValue: (key: string, value: any) => void;
   fetchTodos: (params: TodoRequest) => Promise<void>
 }
@@ -25,14 +26,15 @@ const useTodoStore = create<TodoState>()(
       loading: false,
       total: 0,
       pageNum: 0,
-      top:0,
-      showTop:false,
+      top: 0,
+      tabKey: 'all',
+      showTop: false,
       setValue: (key, value) => set((state) => {
         state[key] = value;
       }),
-      fetchTodos: async ({ pageNum, pageSize }) => {
+      fetchTodos: async ({ pageNum, pageSize,complete }) => {
         Taro.showLoading({ title: '加载中' })
-        const res = await fetchTodoList({ pageNum, pageSize })
+        const res = await fetchTodoList({ pageNum, pageSize,complete })
         set((state) => ({
           list: pageNum === 0 ? res.data : state.list.concat(res.data),
           total: res.total

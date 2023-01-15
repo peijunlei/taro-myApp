@@ -25,7 +25,7 @@ class App extends Component {
     wx.onAppRoute(() => {
       const pages = getCurrentPages()
       const currentPage = pages[pages.length - 1]
-      console.log(currentPage.$taroPath);
+      // console.log(currentPage.$taroPath);
       currentPage.onShareAppMessage = () => {
         return {
           title: "快分享给你的好友吧~~~",
@@ -37,9 +37,10 @@ class App extends Component {
   }
   render() {
     return (
-      <Provider store={store}>
-        {this.props.children}
-      </Provider>
+      this.props.children
+      // <Provider store={store}>
+      //   {this.props.children}
+      // </Provider>
     )
   }
 }

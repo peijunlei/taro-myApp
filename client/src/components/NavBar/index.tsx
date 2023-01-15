@@ -1,8 +1,8 @@
 import Taro from '@tarojs/taro';
 import { View, Text } from '@tarojs/components';
 import { forwardRef, ForwardRefRenderFunction, useImperativeHandle, useMemo } from 'react';
-import './index.scss';
 import { toRpx } from '@/utils';
+import './index.scss';
 
 
 interface INavBarProps {
@@ -55,7 +55,7 @@ const NavBar: ForwardRefRenderFunction<NavBarRef, INavBarProps> = (
   const navBarInfo = useMemo(() => {
     const systemInfo = Taro.getSystemInfoSync()
     const capsuleInfo = Taro.getMenuButtonBoundingClientRect();
-    const { statusBarHeight = 0, windowWidth, pixelRatio } = systemInfo
+    const { statusBarHeight = 0, windowWidth } = systemInfo
 
     /**胶囊到状态栏的间隙 */
     const gap = capsuleInfo.top - statusBarHeight
@@ -69,8 +69,6 @@ const NavBar: ForwardRefRenderFunction<NavBarRef, INavBarProps> = (
       capsuleInfo
     }
   }, [])
-  // console.log('导航栏信息=>', navBarInfo);
-
 
   useImperativeHandle(ref, () => ({
     height: navBarInfo.height
@@ -108,6 +106,7 @@ const NavBar: ForwardRefRenderFunction<NavBarRef, INavBarProps> = (
       </View>
     )
     return null;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title, showSearch])
   return (
     <View
@@ -115,7 +114,7 @@ const NavBar: ForwardRefRenderFunction<NavBarRef, INavBarProps> = (
       style={{ height: toRpx(navBarInfo.height) }}
     >
       <View
-        className={`nav-bar__inner`}
+        className='nav-bar__inner'
         style={{
           color,
           background,
@@ -123,14 +122,16 @@ const NavBar: ForwardRefRenderFunction<NavBarRef, INavBarProps> = (
           paddingTop: toRpx(navBarInfo.statusBarHeight + navBarInfo.gap),
           paddingBottom: toRpx(navBarInfo.gap),
           paddingRight: toRpx(navBarInfo.capsuleInfo.width + navBarInfo.right)
-        }} >
+        }}
+      >
         <View
           className='nav-bar__left'
           style={{
             width: toRpx(navBarInfo.capsuleInfo.width),
             height: toRpx(navBarInfo.capsuleInfo.height),
             marginLeft: toRpx(navBarInfo.right)
-          }} >
+          }}
+        >
           {showBack && !showHome && (
             <View
               onClick={handleBackClick}
@@ -144,7 +145,7 @@ const NavBar: ForwardRefRenderFunction<NavBarRef, INavBarProps> = (
             />
           )}
           {showBack && showBack && (
-            <View className={`nav-bar__buttons`} style={{ borderRadius: navBarInfo.capsuleInfo.height / 2 }}>
+            <View className='nav-bar__buttons' style={{ borderRadius: navBarInfo.capsuleInfo.height / 2 }}>
               <View
                 onClick={handleBackClick}
                 className={`nav-bar__button nav-bar__btn_goback ${iconTheme}`}
