@@ -33,10 +33,12 @@ const Todo = (props: Props) => {
   const { setValue, fetchTodos, showTop, tabKey } = useTodoStore()
   useDidShow(async () => {
     setValue('pageNum', 0)
-    fetchTodos({ pageNum: 0, complete: tabKey === 'all' ? undefined : tabKey === 1 })
+    fetchTodos({ pageNum: 0, })
   })
   useEffect(() => {
-    fetchTodos({ pageNum: 0, complete: tabKey === 'all' ? undefined : tabKey === 1 })
+    console.log(tabKey === 1);
+
+    fetchTodos({ pageNum: 0 })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tabKey])
   return (

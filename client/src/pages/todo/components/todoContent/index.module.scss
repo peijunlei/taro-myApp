@@ -1,28 +1,28 @@
 .todo_content {
-  height: 100%;
+  height: calc(100% - 80px);
+  background-color: #e4ebf5;
   .todo_item {
     @include flex;
     padding: 20px;
     border-radius: 10px;
     margin: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    background-color: #e4ebf5;
+    box-shadow: 0.8rem 0.8rem 1.4rem #c8d0e7, -0.2rem -0.2rem 1.8rem #ffffff;
     .desc {
       flex: 1;
-      .title {
-        width: 100%;
-        height: 100px;
-        font-size: 40px;
-        margin-bottom: 20px;
-        @include text-ellipsis-2;
-      }
-      .time {
-        color: rgba(0, 0, 0, 0.5);
+      font-size: 32px;
+      line-height: 100px;
+      @include text-ellipsis-1;
+      &.complete{
+        text-decoration: line-through
       }
     }
-    .icon {
-      width: 40px;
-      height: 40px;
+    .actions {
+      @include flex;
+      .icon {
+        width: 40px;
+        height: 40px;
+      }
     }
   }
   .empty {
@@ -34,5 +34,6 @@
   .status {
     text-align: center;
     padding-bottom: 20px;
+    color: #c1c1c1;
   }
 }

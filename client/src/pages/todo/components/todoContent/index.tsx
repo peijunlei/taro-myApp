@@ -1,16 +1,16 @@
 import Taro from "@tarojs/taro";
 
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { ScrollView, View, Image, Checkbox, Text, Button } from "@tarojs/components";
+import { ScrollView, View, Image, Checkbox, Text } from "@tarojs/components";
 import { FC, useEffect, useRef, useState } from "react";
 import styles from './index.module.scss'
 
 import deleteIcon from '../../img/delete.png'
 import useTodoStore from "../../store";
-import { removeTodo } from "../../api";
 import { TodoItem } from "../../types";
 import moment from 'dayjs'
 import TimeFormat from "@/constants/time-format";
+import { changeTodoComplete, removeTodo } from "../../api";
 
 interface TodoContentProps {
   nextPage?: () => void;
@@ -130,20 +130,24 @@ function Item({ data }: { data: TodoItem }) {
     await fetchTodos({ pageNum: 0 })
     Taro.showToast({ title: "删除成功", icon: 'none' })
   }
+  const handleChange = async (id: string, bol: boolean) => {
+    await changeTodoComplete(id, !bol)
+    await fetchTodos({ pageNum: 0 })
+    Taro.showToast({ title: "更新成功", icon: 'none' })
+  }
   return (
     <View className={styles.todo_item}>
       <View
-        className={styles.desc}
+        className={`${styles.desc} ${data.complete ? styles.complete : ''}`}
         onClick={() => handleJump(data)}
       >
-        <View className={styles.title}>
-          {data.description}
-        </View>
-        <View className={styles.time}>
-          {moment(data.createTime as Date).format(TimeFormat.DEFAULT_TIME)}
-        </View>
+        {data.description}
       </View>
-      <Image src={deleteIcon} className={styles.icon} onClick={() => handleremove(data._id)} />
+      <View className={styles.actions}>
+        <Checkbox checked={data.complete} value='0' onClick={() => handleChange(data._id, data.complete)} />
+        <Image src={deleteIcon} className={styles.icon} onClick={() => handleremove(data._id)} />
+      </View>
+
     </View>
   )
 }
