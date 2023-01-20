@@ -34,10 +34,10 @@ const useTodoStore = create<TodoState>()(
       setValue: (key, value) => set((state) => {
         state[key] = value;
       }),
-      fetchTodos: async ({ pageNum, pageSize = 10 }) => {
+      fetchTodos: async ({ pageNum }) => {
         Taro.showLoading({ title: '加载中' })
         const complete = get().tabKey === 'all' ? undefined : get().tabKey === 1
-        const res = await fetchTodoList({ pageNum, pageSize, complete })
+        const res = await fetchTodoList({ pageNum, pageSize: 10, complete })
         const result = res.result as { data: TodoItem[], total: number }
         set((state) => ({
           list: pageNum === 0 ? result.data : state.list.concat(result.data),

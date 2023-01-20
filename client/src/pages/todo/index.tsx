@@ -4,16 +4,13 @@ import Taro, { useDidShow } from "@tarojs/taro";
 
 import NavBar, { NavBarRef } from "@/components/NavBar";
 import addIcon from '@/assets/common/add.png';
+import Tabs from "@/components/Tabs";
 import TodoContent from "./components/todoContent";
 
 import styles from './index.module.scss'
 
 import useTodoStore from "./store";
-import Tabs from "@/components/Tabs";
 // import NavBar from "@/components/nav-bar";
-type Props = {
-
-};
 const options = [
   {
     label: '全部',
@@ -28,7 +25,7 @@ const options = [
     key: 0
   }
 ]
-const Todo = (props: Props) => {
+const Todo = () => {
   const navRef = useRef<NavBarRef>(null)
   const { setValue, fetchTodos, showTop, tabKey } = useTodoStore()
   useDidShow(async () => {
@@ -36,8 +33,6 @@ const Todo = (props: Props) => {
     fetchTodos({ pageNum: 0, })
   })
   useEffect(() => {
-    console.log(tabKey === 1);
-
     fetchTodos({ pageNum: 0 })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tabKey])
